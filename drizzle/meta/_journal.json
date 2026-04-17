@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1776243559146,
+      "tag": "0000_awesome_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1776243625481,
+      "tag": "0001_early_purifiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1776307345227,
+      "tag": "0002_cute_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1776315717864,
+      "tag": "0003_outgoing_kitty_pryde",
+      "breakpoints": true
+    }
+  ]
+}

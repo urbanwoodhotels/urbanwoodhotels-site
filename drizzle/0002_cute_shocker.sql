@@ -1,0 +1,1 @@
+ALTER TABLE `quiz_submissions` MODIFY COLUMN `phone` varchar(50);

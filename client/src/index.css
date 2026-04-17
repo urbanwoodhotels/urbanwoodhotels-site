@@ -1,0 +1,254 @@
+/*
+ * DESIGN PHILOSOPHY: 復古航空 × 登機證美學 (Retro Aviation × Boarding Pass Aesthetic)
+ * Design Movement: Mid-Century Modern Aviation Poster
+ * Color Philosophy: Deep Navy (#1B3A5C) + Cream (#F5F0E8) + Gold (#D4A843) + Coral (#E8654A)
+ * Typography: Playfair Display (headings) + Noto Serif TC (Chinese headings) + DM Sans (body) + Noto Sans TC (Chinese body)
+ * Layout: Full-screen immersive, each question fills the viewport, boarding pass card aesthetic
+ * Signature: Dashed borders, geometric Art Deco patterns, stamp/seal animations
+ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.25rem;
+  /* Retro Aviation Color Palette */
+  --background: oklch(0.15 0.04 240);          /* Deep Navy */
+  --foreground: oklch(0.95 0.02 80);            /* Cream White */
+  --card: oklch(0.18 0.04 240);                 /* Slightly lighter navy */
+  --card-foreground: oklch(0.95 0.02 80);
+  --popover: oklch(0.18 0.04 240);
+  --popover-foreground: oklch(0.95 0.02 80);
+  --primary: oklch(0.72 0.12 75);               /* Gold */
+  --primary-foreground: oklch(0.15 0.04 240);   /* Navy on gold */
+  --secondary: oklch(0.65 0.14 30);             /* Coral Red */
+  --secondary-foreground: oklch(0.98 0.01 80);
+  --muted: oklch(0.22 0.04 240);
+  --muted-foreground: oklch(0.70 0.04 80);
+  --accent: oklch(0.72 0.12 75);                /* Gold accent */
+  --accent-foreground: oklch(0.15 0.04 240);
+  --destructive: oklch(0.65 0.14 30);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.35 0.06 240);
+  --input: oklch(0.25 0.05 240);
+  --ring: oklch(0.72 0.12 75);
+  --chart-1: oklch(0.72 0.12 75);
+  --chart-2: oklch(0.65 0.14 30);
+  --chart-3: oklch(0.55 0.12 200);
+  --chart-4: oklch(0.75 0.10 150);
+  --chart-5: oklch(0.60 0.15 300);
+  --sidebar: oklch(0.18 0.04 240);
+  --sidebar-foreground: oklch(0.95 0.02 80);
+  --sidebar-primary: oklch(0.72 0.12 75);
+  --sidebar-primary-foreground: oklch(0.15 0.04 240);
+  --sidebar-accent: oklch(0.22 0.04 240);
+  --sidebar-accent-foreground: oklch(0.95 0.02 80);
+  --sidebar-border: oklch(0.35 0.06 240);
+  --sidebar-ring: oklch(0.72 0.12 75);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+  }
+  h1, h2, h3 {
+    font-family: 'Playfair Display', 'Noto Serif TC', serif;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1280px;
+    }
+  }
+
+  /* Boarding Pass Dashed Border */
+  .boarding-pass-border {
+    border: 2px dashed oklch(0.72 0.12 75 / 0.6);
+    position: relative;
+  }
+
+  /* Art Deco geometric divider */
+  .deco-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .deco-divider::before,
+  .deco-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, oklch(0.72 0.12 75 / 0.5), transparent);
+  }
+
+  /* Vintage grain overlay */
+  .grain-overlay {
+    position: relative;
+  }
+  .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.04;
+  }
+
+  /* Option card hover effect */
+  .option-card {
+    transition: all 0.25s ease;
+    border: 1.5px solid oklch(0.72 0.12 75 / 0.25);
+    background: oklch(0.20 0.05 240 / 0.8);
+    backdrop-filter: blur(8px);
+  }
+  .option-card:hover {
+    border-color: oklch(0.72 0.12 75 / 0.8);
+    background: oklch(0.25 0.06 240 / 0.9);
+    transform: translateX(6px);
+    box-shadow: -4px 0 0 oklch(0.72 0.12 75), 0 4px 20px oklch(0.72 0.12 75 / 0.2);
+  }
+  .option-card.selected {
+    border-color: oklch(0.72 0.12 75);
+    background: oklch(0.72 0.12 75 / 0.15);
+    box-shadow: -4px 0 0 oklch(0.72 0.12 75), 0 4px 20px oklch(0.72 0.12 75 / 0.3);
+  }
+
+  /* Progress bar film strip style */
+  .film-strip-progress {
+    background: oklch(0.25 0.05 240);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .film-strip-progress::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      oklch(0.15 0.04 240) 8px,
+      oklch(0.15 0.04 240) 10px
+    );
+    z-index: 1;
+  }
+
+  /* Stamp animation */
+  @keyframes stamp-in {
+    0% { transform: scale(1.5) rotate(-5deg); opacity: 0; }
+    60% { transform: scale(0.95) rotate(1deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  .stamp-animate {
+    animation: stamp-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* Boarding pass print animation */
+  @keyframes print-reveal {
+    0% { clip-path: inset(0 0 100% 0); }
+    100% { clip-path: inset(0 0 0% 0); }
+  }
+  .print-reveal {
+    animation: print-reveal 1.2s ease-out forwards;
+  }
+
+  /* Question slide-in */
+  @keyframes slide-up-fade {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  .slide-up-fade {
+    animation: slide-up-fade 0.5s ease-out forwards;
+  }
+
+  /* Chapter transition */
+  @keyframes chapter-reveal {
+    0% { opacity: 0; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .chapter-reveal {
+    animation: chapter-reveal 0.8s ease-out forwards;
+  }
+}
