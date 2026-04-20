@@ -11,6 +11,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { chapters as staticChapters, results, calculateResult, type AnswerType, type Chapter } from '@/lib/quizData';
 
 // ─── Apply admin config overrides to static data ─────────────────────────────
+function shuffleArray<T>(array: T[]): T[] {
+  const copied = [...array];
+  for (let i = copied.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copied[i], copied[j]] = [copied[j], copied[i]];
+  }
+  return copied;
+}
 function extractColors(configRows: { configKey: string; configValue: string }[]) {
   const configMap = Object.fromEntries(configRows.map((r) => [r.configKey, r.configValue]));
   return {
@@ -30,15 +38,31 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
     if (row.configKey.startsWith('question_extra_')) {
       try {
         const parsed = JSON.parse(row.configValue) as {
-          id: number; chapterId: number; text: string; A: string; B: string; C: string;
-          sensoryType: '視覺' | '聽覺' | '嗅覺' | '觸覺';
-        };
-        const q: import('@/lib/quizData').Question = {
-          id: parsed.id,
-          text: parsed.text,
-          sensoryType: parsed.sensoryType,
-          options: { A: parsed.A, B: parsed.B, C: parsed.C },
-        };
+  id: number;
+  chapterId: number;
+  text: string;
+  A: string;
+  B: string;
+  C: string;
+  D?: string;
+  E?: string;
+  F?: string;
+  sensoryType: '視覺' | '聽覺' | '嗅覺' | '觸覺';
+};
+
+const q: import('@/lib/quizData').Question = {
+  id: parsed.id,
+  text: parsed.text,
+  sensoryType: parsed.sensoryType,
+  options: {
+    A: parsed.A,
+    B: parsed.B,
+    C: parsed.C,
+    D: parsed.D ?? '',
+    E: parsed.E ?? '',
+    F: parsed.F ?? '',
+  },
+};
         if (!extraByChapter[parsed.chapterId]) extraByChapter[parsed.chapterId] = [];
         extraByChapter[parsed.chapterId].push(q);
         extraQuestions.push(q);
@@ -53,8 +77,27 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
       const qKey = `question_${q.id}`;
       if (configMap[qKey]) {
         try {
-          const parsed = JSON.parse(configMap[qKey]) as { text: string; A: string; B: string; C: string };
-          return { ...q, text: parsed.text, options: { A: parsed.A, B: parsed.B, C: parsed.C } };
+        const parsed = JSON.parse(configMap[qKey]) as {
+  text: string;
+  A: string;
+  B: string;
+  C: string;
+  D?: string;
+  E?: string;
+  F?: string;
+};
+return {
+  ...q,
+  text: parsed.text,
+  options: {
+    A: parsed.A,
+    B: parsed.B,
+    C: parsed.C,
+    D: parsed.D ?? q.options.D ?? '',
+    E: parsed.E ?? q.options.E ?? '',
+    F: parsed.F ?? q.options.F ?? '',
+  },
+};
         } catch {
           return q;
         }
@@ -336,7 +379,14 @@ function QuestionScreen({
     嗅覺: '#7A9E8E',
     觸覺: '#D4A843',
   };
+const shuffledAnswers = useMemo(() => {
+  if (question.questionType === 'open-end') return [];
 
+  const entries = (Object.entries(question.options) as [AnswerType, string][])
+    .filter(([, text]) => String(text ?? '').trim() !== '');
+
+  return shuffleArray(entries);
+}, [questionIndex]);
   return (
     <motion.div
       key={questionIndex}
@@ -404,10 +454,11 @@ function QuestionScreen({
             />
           </div>
         ) : (
+        ) : (
           <div className="space-y-3">
-            {(['A', 'B', 'C'] as AnswerType[]).map((opt, i) => (
+            {shuffledAnswers.map(([opt, text], i) => (
               <motion.button
-                key={opt}
+                key={`${question.id}-${opt}-${i}`}
                 onClick={() => onAnswer(opt)}
                 className={`option-card w-full text-left px-5 py-4 rounded-sm flex items-start gap-4 ${
                   selectedAnswer === opt ? 'selected' : ''
@@ -415,7 +466,7 @@ function QuestionScreen({
                 style={{ background: selectedAnswer === opt ? undefined : cardBg }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15 + i * 0.1 }}
+                transition={{ delay: 0.15 + i * 0.08 }}
                 whileTap={{ scale: 0.99 }}
               >
                 <span
@@ -426,7 +477,7 @@ function QuestionScreen({
                     background: selectedAnswer === opt ? 'rgba(212,168,67,0.15)' : 'transparent',
                   }}
                 >
-                  {opt}
+                  {String.fromCharCode(65 + i)}
                 </span>
                 <span
                   className="text-sm md:text-base leading-relaxed"
@@ -435,7 +486,7 @@ function QuestionScreen({
                     color: selectedAnswer === opt ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.75)',
                   }}
                 >
-                  {question.options[opt]}
+                  {text}
                 </span>
               </motion.button>
             ))}
@@ -566,10 +617,13 @@ function GiveawayFormScreen({
   const labelClass = "block text-[#D4A843]/60 text-[10px] tracking-[0.2em] uppercase mb-1 font-['DM_Sans']";
 
   const bgMap: Record<string, string> = {
-    A: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter3-waterfront-iPfdaUQUxczMzsT66zKagV.webp',
-    B: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
-    C: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
-  };
+  A: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter3-waterfront-iPfdaUQUxczMzsT66zKagV.webp',
+  B: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
+  C: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
+  D: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
+  E: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
+  F: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/hero-bg-XS9H5NH3aLyjCXKGtNcwKc.webp',
+};
 
   return (
     <motion.div
@@ -857,10 +911,13 @@ function ResultScreen({
   };
 
   const resultBgMap: Record<AnswerType, string> = {
-    A: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter3-waterfront-iPfdaUQUxczMzsT66zKagV.webp',
-    B: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
-    C: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
-  };
+  A: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter3-waterfront-iPfdaUQUxczMzsT66zKagV.webp',
+  B: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
+  C: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
+  D: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
+  E: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
+  F: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/hero-bg-XS9H5NH3aLyjCXKGtNcwKc.webp',
+};
 
   return (
     <motion.div
