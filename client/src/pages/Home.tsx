@@ -493,29 +493,6 @@ const shuffledAnswers = useMemo(() => {
         )}
 
         <AnimatePresence>
-          {(question.questionType === 'open-end'
-            ? (openEndAnswer ?? '').trim().length > 0
-            : !!selectedAnswer) && (
-            <motion.div
-              className="mt-8 flex justify-end"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-            >
-              <button
-                onClick={onNext}
-                className="px-8 py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.15em] uppercase transition-transform hover:scale-105 active:scale-95"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
-                  fontFamily: "'DM Sans', sans-serif",
-                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-                }}
-              >
-                {questionIndex === totalQuestions - 1 ? btnLastQuestion : btnNext}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
           {(question.questionType === 'open-end' ? (openEndAnswer ?? '').trim().length > 0 : !!selectedAnswer) && (
             <motion.div
               className="mt-8 flex justify-end"
