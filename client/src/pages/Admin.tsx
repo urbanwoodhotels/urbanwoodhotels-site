@@ -4,7 +4,7 @@
  * Access: Admin role only
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import { chapters, results, type AnswerType } from '@/lib/quizData';
@@ -32,24 +32,78 @@ function downloadCSV(rows: Record<string, unknown>[], filename: string) {
 }
 
 // ─── Image Uploader ──────────────────────────────────────────────────────────
+async function compressImage(
+  file: File,
+  options?: {
+    maxWidth?: number;
+    maxHeight?: number;
+    quality?: number;
+    outputType?: 'image/jpeg' | 'image/webp';
+  }
+): Promise<string> {
+  const {
+    maxWidth = 1200,
+    maxHeight = 1200,
+    quality = 0.72,
+    outputType = 'image/jpeg',
+  } = options || {};
+
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ''));
+    reader.onerror = () => reject(new Error('讀取圖片失敗'));
+    reader.readAsDataURL(file);
+  });
+
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('圖片載入失敗'));
+    image.src = dataUrl;
+  });
+
+  let { width, height } = img;
+  const scale = Math.min(1, maxWidth / width, maxHeight / height);
+  width = Math.round(width * scale);
+  height = Math.round(height * scale);
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('無法處理圖片');
+
+  ctx.drawImage(img, 0, 0, width, height);
+  return canvas.toDataURL(outputType, quality);
+}
+
 function ImageUploader({ onUploaded, currentUrl }: { onUploaded: (url: string) => void; currentUrl?: string }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(currentUrl ?? '');
+  const [urlInput, setUrlInput] = useState(currentUrl ?? '');
+
+  useEffect(() => {
+    setPreview(currentUrl ?? '');
+    setUrlInput(currentUrl ?? '');
+  }, [currentUrl]);
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) { toast.error('請選擇圖片檔案'); return; }
     if (file.size > 10 * 1024 * 1024) { toast.error('圖片不能超過 10MB'); return; }
+
     setUploading(true);
     try {
-      const reader = new FileReader();
-      const result = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(String(reader.result ?? ''));
-        reader.onerror = () => reject(new Error('讀取圖片失敗'));
-        reader.readAsDataURL(file);
+      const compressed = await compressImage(file, {
+        maxWidth: 1200,
+        maxHeight: 1200,
+        quality: 0.72,
+        outputType: 'image/jpeg',
       });
-      setPreview(result);
-      onUploaded(result);
-      toast.success('圖片已保存到瀏覽器！');
+      setPreview(compressed);
+      setUrlInput(compressed);
+      onUploaded(compressed);
+      toast.success('圖片已自動壓縮並保存！');
     } catch (err) {
       toast.error('上傳失敗：' + String(err));
     } finally {
@@ -57,8 +111,16 @@ function ImageUploader({ onUploaded, currentUrl }: { onUploaded: (url: string) =
     }
   };
 
+  const handleApplyUrl = () => {
+    const value = urlInput.trim();
+    if (!value) { toast.error('請輸入圖片 URL'); return; }
+    setPreview(value);
+    onUploaded(value);
+    toast.success('圖片 URL 已更新！');
+  };
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <label
         className="flex flex-col items-center justify-center w-full h-28 rounded-sm cursor-pointer transition-all hover:border-[#D4A843]/50"
         style={{ border: '2px dashed rgba(212,168,67,0.25)', background: 'rgba(255,255,255,0.02)' }}
@@ -67,14 +129,38 @@ function ImageUploader({ onUploaded, currentUrl }: { onUploaded: (url: string) =
       >
         <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
         {uploading ? (
-          <span className="text-[#D4A843]/60 text-xs font-['DM_Sans']">上傳中...</span>
+          <span className="text-[#D4A843]/60 text-xs font-['DM_Sans']">壓縮及保存中...</span>
         ) : (
           <>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mb-2 opacity-40"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><polyline points="17 8 12 3 7 8" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="3" x2="12" y2="15" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round"/></svg>
-            <span className="text-white/30 text-[10px] font-['DM_Sans']">點擊或拖放圖片（最大 10MB）</span>
+            <span className="text-white/30 text-[10px] font-['DM_Sans']">點擊或拖放圖片（系統會自動壓縮）</span>
           </>
         )}
       </label>
+
+      <div className="flex gap-2">
+        <input
+          type="url"
+          value={urlInput}
+          onChange={(e) => setUrlInput(e.target.value)}
+          placeholder="或手動輸入圖片 URL..."
+          className="flex-1 bg-white/5 border border-[#D4A843]/20 text-white text-xs px-3 py-2 rounded-sm placeholder:text-white/20 focus:outline-none focus:border-[#D4A843]/40 transition-colors"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
+        />
+        <button
+          type="button"
+          onClick={handleApplyUrl}
+          className="px-4 py-2 text-[#0D1B2E] text-xs font-semibold tracking-wider uppercase"
+          style={{ background: 'linear-gradient(135deg, #D4A843, #E8C56A)', fontFamily: "'DM Sans', sans-serif" }}
+        >
+          套用 URL
+        </button>
+      </div>
+
+      <p className="text-white/35 text-[10px] leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+        建議：保留 upload 方便快速測試；正式活動用圖可貼公開 URL，會更穩定，亦較少出現 quota exceeded。
+      </p>
+
       {preview && (
         <div className="w-full h-24 rounded-sm overflow-hidden">
           <img src={preview} alt="preview" className="w-full h-full object-cover opacity-70" />
