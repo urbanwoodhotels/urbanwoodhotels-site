@@ -471,24 +471,46 @@ function QuestionScreen({
 }
 
 // ─── Giveaway Form Screen (shown before result) ──────────────────────────────────────
-function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers }: { resultType: AnswerType; onComplete: () => void; configRows?: { configKey: string; configValue: string }[]; openEndAnswers?: Record<number, string> }) {
+function GiveawayFormScreen({
+  resultType,
+  onComplete,
+  configRows,
+  openEndAnswers,
+}: {
+  resultType: AnswerType;
+  onComplete: () => void;
+  configRows?: { configKey: string; configValue: string }[];
+  openEndAnswers?: Record<number, string>;
+}) {
   const result = results[resultType];
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
-  const introZh = cfg['form_intro_zh'] ?? '感謝您參加本次心理測驗！請根據以下要求提交您的相關資料以作參加抽獎。閣下必須細閱及遵守條款及細則，而閣下的參與及遞交該表格將代表已閱讀及同意各項條款及細則。';
-  const introEn = cfg['form_intro_en'] ?? 'Thank you for participating in this psychological test! Please provide the relevant information as per the requirements below to register the giveaway. You must carefully read and comply with the Terms and Conditions. Your participation and submission of this form will signify that you have read, understood, and agreed to all the stated terms and conditions.';
+  const introZh =
+    cfg['form_intro_zh'] ??
+    '感謝您參加本次心理測驗！請根據以下要求提交您的相關資料以作參加抽獎。閣下必須細閱及遵守條款及細則，而閣下的參與及遞交該表格將代表已閱讀及同意各項條款及細則。';
+  const introEn =
+    cfg['form_intro_en'] ??
+    'Thank you for participating in this psychological test! Please provide the relevant information as per the requirements below to register the giveaway. You must carefully read and comply with the Terms and Conditions. Your participation and submission of this form will signify that you have read, understood, and agreed to all the stated terms and conditions.';
   const termsLabel = cfg['form_terms_label'] ?? '條款及細則 Terms and Conditions';
   const termsUrl = cfg['form_terms_url'] ?? 'https://southnesthk.com/south-nest-3rd-anniversary-celebration2026/';
-  const consentZh = cfg['form_consent_zh'] ?? '本人願意提供上述個人資料，並同意使用我的電郵地址，用於發送直接促銷訊息，包括產品推廣、折扣活動及相關資訊。本人明白可隨時取消訂閱。';
-  const consentEn = cfg['form_consent_en'] ?? 'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
-  const successMsg = cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
+  const consentZh =
+    cfg['form_consent_zh'] ??
+    '本人願意提供上述個人資料，並同意使用我的電郵地址，用於發送直接促銷訊息，包括產品推廣、折扣活動及相關資訊。本人明白可隨時取消訂閱。';
+  const consentEn =
+    cfg['form_consent_en'] ??
+    'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
+  const successMsg =
+    cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
   const btnSubmitForm = cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
   const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
   const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
   const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
-  const platformFieldLabel = cfg['form_platform_field_label'] ?? '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
+  const platformFieldLabel =
+    cfg['form_platform_field_label'] ??
+    '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
   const socialHandleFieldLabel = cfg['form_social_handle_field_label'] ?? '2. 社交平台用戶名稱 Social Media Username';
   const nameFieldLabel = cfg['form_name_field_label'] ?? '3. 姓名 Name';
   const emailFieldLabel = cfg['form_email_field_label'] ?? '4. 電郵地址 Email Address';
+
   const [platform, setPlatform] = useState<'instagram' | 'facebook' | ''>('');
   const [socialHandle, setSocialHandle] = useState('');
   const [name, setName] = useState('');
@@ -507,14 +529,40 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!platform) { toast.error('請選擇參加平台'); return; }
-    if (!socialHandle.trim()) { toast.error('請填寫帳戶名稱'); return; }
-    if (!name.trim()) { toast.error('請填寫姓名'); return; }
-    if (!email.trim()) { toast.error('請填寫電郵地址'); return; }
-    submitMutation.mutate({ platform, socialHandle: socialHandle.trim(), name: name.trim(), email: email.trim(), resultType, resultName: result.name, marketingConsent, openEndAnswers: openEndAnswers && Object.keys(openEndAnswers).length > 0 ? Object.fromEntries(Object.entries(openEndAnswers).map(([k, v]) => [String(k), v])) : undefined });
+    if (!platform) {
+      toast.error('請選擇參加平台');
+      return;
+    }
+    if (!socialHandle.trim()) {
+      toast.error('請填寫帳戶名稱');
+      return;
+    }
+    if (!name.trim()) {
+      toast.error('請填寫姓名');
+      return;
+    }
+    if (!email.trim()) {
+      toast.error('請填寫電郵地址');
+      return;
+    }
+
+    submitMutation.mutate({
+      platform,
+      socialHandle: socialHandle.trim(),
+      name: name.trim(),
+      email: email.trim(),
+      resultType,
+      resultName: result.name,
+      marketingConsent,
+      openEndAnswers:
+        openEndAnswers && Object.keys(openEndAnswers).length > 0
+          ? Object.fromEntries(Object.entries(openEndAnswers).map(([k, v]) => [String(k), v]))
+          : undefined,
+    });
   };
 
-  const inputClass = "w-full bg-white/5 border border-[#D4A843]/20 text-white text-sm px-3 py-2 rounded-sm placeholder:text-white/30 focus:outline-none focus:border-[#D4A843]/50 transition-colors";
+  const inputClass =
+    "w-full bg-white/5 border border-[#D4A843]/20 text-white text-sm px-3 py-2 rounded-sm placeholder:text-white/30 focus:outline-none focus:border-[#D4A843]/50 transition-colors";
   const labelClass = "block text-[#D4A843]/60 text-[10px] tracking-[0.2em] uppercase mb-1 font-['DM_Sans']";
 
   const bgMap: Record<string, string> = {
@@ -530,7 +578,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      {/* Background */}
       <div className="absolute inset-0 bg-[#0D1B2E]" />
       <div
         className="absolute inset-0 bg-cover bg-center opacity-20"
@@ -544,23 +591,27 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
       >
-        {/* Result teaser */}
         <div className="text-center mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px flex-1 bg-[#D4A843]/40" />
-            <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{almostThereLabel}</span>
+            <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">
+              {almostThereLabel}
+            </span>
             <div className="h-px flex-1 bg-[#D4A843]/40" />
           </div>
           <div className="flex items-center justify-center gap-3 mb-2">
             <span className="text-3xl">{result.icon}</span>
             <div>
-              <p className="text-[#D4A843]/60 text-[10px] tracking-[0.2em] font-['DM_Sans'] uppercase mb-0.5">{travelerTypeLabel}</p>
-              <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif TC', serif" }}>{result.name}</h2>
+              <p className="text-[#D4A843]/60 text-[10px] tracking-[0.2em] font-['DM_Sans'] uppercase mb-0.5">
+                {travelerTypeLabel}
+              </p>
+              <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif TC', serif" }}>
+                {result.name}
+              </h2>
             </div>
           </div>
         </div>
 
-        {/* Form card */}
         <div
           className="rounded-sm p-6"
           style={{
@@ -569,12 +620,12 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
             boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
           }}
         >
-            ) : (
+          {submitted ? (
             <div className="text-center py-4">
               <div className="text-4xl mb-3">🎫</div>
               <p className="text-[#D4A843] text-base font-semibold mb-2" style={{ fontFamily: "'Noto Serif TC', serif" }}>
                 {successTitleLabel}
-              </p>   </p>
+              </p>
               <p className="text-white/60 text-xs mb-6" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
                 {successMsg}
               </p>
@@ -592,7 +643,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Intro text */}
               <div
                 className="rounded-sm p-4 mb-2"
                 style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
@@ -614,7 +664,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
                 </a>
               </div>
 
-              {/* Platform */}
               <div>
                 <label className={labelClass}>{platformFieldLabel}</label>
                 <div className="flex gap-3">
@@ -637,7 +686,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
                 </div>
               </div>
 
-              {/* Social Handle */}
               <div>
                 <label className={labelClass}>{socialHandleFieldLabel}</label>
                 <input
@@ -650,7 +698,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
                 />
               </div>
 
-              {/* Name */}
               <div>
                 <label className={labelClass}>{nameFieldLabel}</label>
                 <input
@@ -663,7 +710,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
                 />
               </div>
 
-              {/* Email */}
               <div>
                 <label className={labelClass}>{emailFieldLabel}</label>
                 <input
@@ -676,7 +722,6 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
                 />
               </div>
 
-              {/* Marketing consent checkbox */}
               <div
                 className="rounded-sm p-3"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
@@ -698,7 +743,13 @@ function GiveawayFormScreen({ resultType, onComplete, configRows, openEndAnswers
                     >
                       {marketingConsent && (
                         <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                          <path d="M1 4L3.5 6.5L9 1" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path
+                            d="M1 4L3.5 6.5L9 1"
+                            stroke="#D4A843"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
                         </svg>
                       )}
                     </div>
