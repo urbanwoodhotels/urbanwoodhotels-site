@@ -1,9 +1,8 @@
-import { quizQuestions as defaultQuizQuestions, quizResults as defaultQuizResults } from "./quizData";
+import { chapters as defaultQuizQuestions, results as defaultQuizResults } from "./quizData";
 
 const QUESTIONS_KEY = "urbanwood_quiz_questions";
 const RESULTS_KEY = "urbanwood_quiz_results";
 
-/** 取得題目（優先 localStorage，否則用預設） */
 export function getStoredQuizQuestions() {
   try {
     const raw = localStorage.getItem(QUESTIONS_KEY);
@@ -15,8 +14,7 @@ export function getStoredQuizQuestions() {
   }
 }
 
-/** 儲存題目 */
-export function saveQuizQuestions(questions: any[]) {
+export function saveQuizQuestions(questions: any) {
   try {
     localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
   } catch (e) {
@@ -24,7 +22,6 @@ export function saveQuizQuestions(questions: any[]) {
   }
 }
 
-/** 重設為預設題目 */
 export function resetQuizQuestionsToDefault() {
   try {
     localStorage.setItem(QUESTIONS_KEY, JSON.stringify(defaultQuizQuestions));
@@ -35,7 +32,6 @@ export function resetQuizQuestionsToDefault() {
   }
 }
 
-/** 取得結果（優先 localStorage） */
 export function getStoredQuizResults() {
   try {
     const raw = localStorage.getItem(RESULTS_KEY);
@@ -47,7 +43,6 @@ export function getStoredQuizResults() {
   }
 }
 
-/** 儲存結果 */
 export function saveQuizResults(results: any) {
   try {
     localStorage.setItem(RESULTS_KEY, JSON.stringify(results));
@@ -56,7 +51,6 @@ export function saveQuizResults(results: any) {
   }
 }
 
-/** 重設為預設結果 */
 export function resetQuizResultsToDefault() {
   try {
     localStorage.setItem(RESULTS_KEY, JSON.stringify(defaultQuizResults));
@@ -67,7 +61,6 @@ export function resetQuizResultsToDefault() {
   }
 }
 
-/** 一鍵清空（debug用） */
 export function clearAllQuizStorage() {
   localStorage.removeItem(QUESTIONS_KEY);
   localStorage.removeItem(RESULTS_KEY);
