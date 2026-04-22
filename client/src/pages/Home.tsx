@@ -4,7 +4,7 @@
  * Screens: Landing → Chapter Intro → Questions → Result (Boarding Pass)
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +20,21 @@ function shuffleArray<T>(array: T[]): T[] {
   return copied;
 }
 
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < breakpoint : false
+  );
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < breakpoint);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
 // ─── Apply admin config overrides to static data ─────────────────────────────
 function extractColors(configRows: { configKey: string; configValue: string }[]) {
   const configMap = Object.fromEntries(configRows.map((r) => [r.configKey, r.configValue]));
@@ -29,7 +44,10 @@ function extractColors(configRows: { configKey: string; configValue: string }[])
   };
 }
 
-function applyConfig(configRows: { configKey: string; configValue: string }[]): Chapter[] {
+function applyConfig(
+  configRows: { configKey: string; configValue: string }[],
+  isMobile = false
+): Chapter[] {
   if (!configRows.length) return staticChapters;
   const configMap = Object.fromEntries(configRows.map((r) => [r.configKey, r.configValue]));
 
@@ -76,8 +94,12 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
   });
 
   return staticChapters.map((chapter) => {
-    const bgKey = `chapter_${chapter.id}_bg`;
-    const updatedBg = configMap[bgKey] ?? chapter.bgImage;
+    const desktopBgKey = `chapter_${chapter.id}_bg`;
+    const mobileBgKey = `chapter_${chapter.id}_bg_mobile`;
+
+    const updatedBg = isMobile
+      ? configMap[mobileBgKey] ?? configMap[desktopBgKey] ?? chapter.bgImage
+      : configMap[desktopBgKey] ?? chapter.bgImage;
 
     const updatedQuestions = chapter.questions.map((q) => {
       const qKey = `question_${q.id}`;
@@ -1168,15 +1190,19 @@ export default function Home() {
   const [resultType, setResultType] = useState<AnswerType | null>(null);
   const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
 
+  const isMobile = useIsMobile();
+
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
-  const chapters = useMemo(() => applyConfig(configRows ?? []), [configRows]);
+  const chapters = useMemo(() => applyConfig(configRows ?? [], isMobile), [configRows, isMobile]);
   const allQuestions = useMemo(() => chapters.flatMap((c) => c.questions), [chapters]);
   const totalQuestions = allQuestions.length;
 
   const heroBg = useMemo(() => {
-    const row = configRows?.find((r) => r.configKey === 'hero_bg');
-    return row?.configValue ?? HERO_BG;
-  }, [configRows]);
+    const map = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
+    return isMobile
+      ? map['hero_bg_mobile'] ?? map['hero_bg'] ?? HERO_BG
+      : map['hero_bg'] ?? HERO_BG;
+  }, [configRows, isMobile]);
 
   const colors = useMemo(() => extractColors(configRows ?? []), [configRows]);
 
