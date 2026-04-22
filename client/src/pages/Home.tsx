@@ -49,12 +49,14 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
           E?: string;
           F?: string;
           sensoryType: '視覺' | '聽覺' | '嗅覺' | '觸覺';
+          questionType?: 'multiple-choice' | 'open-end';
         };
 
         const q: import('@/lib/quizData').Question = {
           id: parsed.id,
           text: parsed.text,
           sensoryType: parsed.sensoryType,
+          questionType: parsed.questionType ?? 'multiple-choice',
           options: {
             A: parsed.A,
             B: parsed.B,
@@ -512,8 +514,8 @@ function QuestionScreen({
           </div>
         )}
 
-        <AnimatePresence>
-          {(question.questionType === 'open-end' ? (openEndAnswer ?? '').trim().length > 0 : !!selectedAnswer) && (
+        {question.questionType === 'open-end' && (openEndAnswer ?? '').trim().length > 0 && (
+          <AnimatePresence>
             <motion.div
               className="mt-8 flex justify-end"
               initial={{ opacity: 0, y: 10 }}
@@ -532,8 +534,8 @@ function QuestionScreen({
                 {questionIndex === totalQuestions - 1 ? btnLastQuestion : btnNext}
               </button>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        )}
       </div>
     </motion.div>
   );
@@ -567,11 +569,9 @@ function GiveawayFormScreen({
   const consentEn =
     cfg['form_consent_en'] ??
     'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
-  const successMsg = cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
   const btnSubmitForm = cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
   const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
   const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
-  const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
   const platformFieldLabel =
     cfg['form_platform_field_label'] ?? '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
   const socialHandleFieldLabel = cfg['form_social_handle_field_label'] ?? '2. 社交平台用戶名稱 Social Media Username';
@@ -583,14 +583,10 @@ function GiveawayFormScreen({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [marketingConsent, setMarketingConsent] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const submitMutation = trpc.quiz.submit.useMutation({
     onSuccess: () => {
-      setSubmitted(true);
-      setTimeout(() => {
-        onComplete();
-      }, 900);
+      onComplete();
     },
     onError: (err) => {
       toast.error('提交失敗，請再試一次：' + err.message);
@@ -686,151 +682,136 @@ function GiveawayFormScreen({
             boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
           }}
         >
-          {submitted ? (
-            <div className="text-center py-4">
-              <div className="text-4xl mb-3">🎫</div>
-              <p className="text-[#D4A843] text-base font-semibold mb-2" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-                {successTitleLabel}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div
+              className="rounded-sm p-4 mb-2"
+              style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
+            >
+              <p className="text-white/80 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                {introZh}
               </p>
-              <p className="text-white/60 text-xs mb-2" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                {successMsg}
+              <p className="text-white/50 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                {introEn}
               </p>
-              <p className="text-white/35 text-[11px]" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                正在載入你的登機證...
-              </p>
+              <a
+                href={termsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#D4A843] text-xs underline underline-offset-2 hover:text-[#E8C56A] transition-colors"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {termsLabel} ↗
+              </a>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div
-                className="rounded-sm p-4 mb-2"
-                style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
-              >
-                <p className="text-white/80 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                  {introZh}
-                </p>
-                <p className="text-white/50 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                  {introEn}
-                </p>
-                <a
-                  href={termsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#D4A843] text-xs underline underline-offset-2 hover:text-[#E8C56A] transition-colors"
-                  style={{ fontFamily: "'DM Sans', sans-serif" }}
-                >
-                  {termsLabel} ↗
-                </a>
-              </div>
 
-              <div>
-                <label className={labelClass}>{platformFieldLabel}</label>
-                <div className="flex gap-3">
-                  {(['instagram', 'facebook'] as const).map((p) => (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => setPlatform(p)}
-                      className="flex-1 py-2.5 text-xs tracking-wider uppercase transition-all rounded-sm"
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        border: platform === p ? '1px solid #D4A843' : '1px solid rgba(212,168,67,0.2)',
-                        color: platform === p ? '#D4A843' : 'rgba(255,255,255,0.4)',
-                        background: platform === p ? 'rgba(212,168,67,0.1)' : 'transparent',
-                      }}
-                    >
-                      {p === 'instagram' ? 'Instagram' : 'Facebook'}
-                    </button>
-                  ))}
+            <div>
+              <label className={labelClass}>{platformFieldLabel}</label>
+              <div className="flex gap-3">
+                {(['instagram', 'facebook'] as const).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setPlatform(p)}
+                    className="flex-1 py-2.5 text-xs tracking-wider uppercase transition-all rounded-sm"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      border: platform === p ? '1px solid #D4A843' : '1px solid rgba(212,168,67,0.2)',
+                      color: platform === p ? '#D4A843' : 'rgba(255,255,255,0.4)',
+                      background: platform === p ? 'rgba(212,168,67,0.1)' : 'transparent',
+                    }}
+                  >
+                    {p === 'instagram' ? 'Instagram' : 'Facebook'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className={labelClass}>{socialHandleFieldLabel}</label>
+              <input
+                type="text"
+                value={socialHandle}
+                onChange={(e) => setSocialHandle(e.target.value)}
+                placeholder={platform === 'facebook' ? 'Facebook 帳戶名稱' : '@yourhandle'}
+                className={inputClass}
+                style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>{nameFieldLabel}</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your Name"
+                className={inputClass}
+                style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>{emailFieldLabel}</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className={inputClass}
+                style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+              />
+            </div>
+
+            <div
+              className="rounded-sm p-3"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <label className="flex items-start gap-3 cursor-pointer">
+                <div className="relative flex-shrink-0 mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={marketingConsent}
+                    onChange={(e) => setMarketingConsent(e.target.checked)}
+                    className="sr-only"
+                  />
+                  <div
+                    className="w-4 h-4 rounded-sm border flex items-center justify-center transition-all"
+                    style={{
+                      borderColor: marketingConsent ? '#D4A843' : 'rgba(212,168,67,0.3)',
+                      background: marketingConsent ? 'rgba(212,168,67,0.2)' : 'transparent',
+                    }}
+                  >
+                    {marketingConsent && (
+                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path d="M1 4L3.5 6.5L9 1" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </div>
                 </div>
-              </div>
+                <div>
+                  <p className="text-white/70 text-[11px] leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                    {consentZh}
+                  </p>
+                  <p className="text-white/40 text-[10px] leading-relaxed mt-1" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                    {consentEn}
+                  </p>
+                </div>
+              </label>
+            </div>
 
-              <div>
-                <label className={labelClass}>{socialHandleFieldLabel}</label>
-                <input
-                  type="text"
-                  value={socialHandle}
-                  onChange={(e) => setSocialHandle(e.target.value)}
-                  placeholder={platform === 'facebook' ? 'Facebook 帳戶名稱' : '@yourhandle'}
-                  className={inputClass}
-                  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>{nameFieldLabel}</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your Name"
-                  className={inputClass}
-                  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>{emailFieldLabel}</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className={inputClass}
-                  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-                />
-              </div>
-
-              <div
-                className="rounded-sm p-3"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
-              >
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <div className="relative flex-shrink-0 mt-0.5">
-                    <input
-                      type="checkbox"
-                      checked={marketingConsent}
-                      onChange={(e) => setMarketingConsent(e.target.checked)}
-                      className="sr-only"
-                    />
-                    <div
-                      className="w-4 h-4 rounded-sm border flex items-center justify-center transition-all"
-                      style={{
-                        borderColor: marketingConsent ? '#D4A843' : 'rgba(212,168,67,0.3)',
-                        background: marketingConsent ? 'rgba(212,168,67,0.2)' : 'transparent',
-                      }}
-                    >
-                      {marketingConsent && (
-                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                          <path d="M1 4L3.5 6.5L9 1" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-white/70 text-[11px] leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                      {consentZh}
-                    </p>
-                    <p className="text-white/40 text-[10px] leading-relaxed mt-1" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                      {consentEn}
-                    </p>
-                  </div>
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                disabled={submitMutation.isPending}
-                className="w-full py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.2em] uppercase transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
-                  fontFamily: "'DM Sans', sans-serif",
-                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-                }}
-              >
-                {submitMutation.isPending ? '提交中...' : `✶ ${btnSubmitForm}`}
-              </button>
-            </form>
-          )}
+            <button
+              type="submit"
+              disabled={submitMutation.isPending}
+              className="w-full py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.2em] uppercase transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+              style={{
+                background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
+                fontFamily: "'DM Sans', sans-serif",
+                clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+              }}
+            >
+              {submitMutation.isPending ? '提交中...' : `✶ ${btnSubmitForm}`}
+            </button>
+          </form>
         </div>
       </motion.div>
     </motion.div>
@@ -842,10 +823,12 @@ function ResultScreen({
   resultType,
   onRestart,
   configRows,
+  showSubmissionSuccess,
 }: {
   resultType: AnswerType;
   onRestart: () => void;
   configRows?: { configKey: string; configValue: string }[];
+  showSubmissionSuccess?: boolean;
 }) {
   const baseResult = results[resultType];
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
@@ -865,6 +848,9 @@ function ResultScreen({
   const btnBookHotelUrl = cfg['btn_book_hotel_url'] ?? 'https://urbanwoodhotels.com/hk/global_hotels/hung-hom-hk/';
   const btnRestart = cfg['btn_restart'] ?? '重新測驗';
   const resultShareHint = cfg['result_share_hint'] ?? '分享至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！';
+  const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
+  const successMsg = cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
+
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -933,6 +919,31 @@ function ResultScreen({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.8, type: 'spring', stiffness: 100 }}
       >
+        {showSubmissionSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 rounded-sm px-4 py-3 text-center"
+            style={{
+              background: 'rgba(212,168,67,0.10)',
+              border: '1px solid rgba(212,168,67,0.35)',
+            }}
+          >
+            <p
+              className="text-[#D4A843] text-sm font-semibold mb-1"
+              style={{ fontFamily: "'Noto Serif TC', serif" }}
+            >
+              {successTitleLabel}
+            </p>
+            <p
+              className="text-white/55 text-xs"
+              style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+            >
+              {successMsg}
+            </p>
+          </motion.div>
+        )}
+
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-[#D4A843]/40" />
           <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">Boarding Pass · 登機證</span>
@@ -1155,6 +1166,7 @@ export default function Home() {
   const [openEndAnswers, setOpenEndAnswers] = useState<Record<number, string>>({});
   const [chapterIndex, setChapterIndex] = useState(0);
   const [resultType, setResultType] = useState<AnswerType | null>(null);
+  const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
 
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
   const chapters = useMemo(() => applyConfig(configRows ?? []), [configRows]);
@@ -1177,9 +1189,45 @@ export default function Home() {
     setScreen('question');
   }, []);
 
-  const handleAnswer = useCallback((answer: AnswerType) => {
-    setSelectedAnswer(answer);
-  }, []);
+  const handleAnswer = useCallback(
+    (answer: AnswerType) => {
+      setSelectedAnswer(answer);
+
+      setTimeout(() => {
+        setAnswers((prevAnswers) => {
+          const newAnswers = [...prevAnswers, answer];
+          const nextIndex = questionIndex + 1;
+
+          if (nextIndex >= totalQuestions) {
+            const result = calculateResult(newAnswers);
+            setResultType(result);
+            setScreen('giveaway-form');
+            setSelectedAnswer(null);
+            return newAnswers;
+          }
+
+          const currentChapter = chapters[chapterIndex];
+          const currentChapterQCount = currentChapter.questions.length;
+          const questionsAnsweredInChapter = newAnswers.filter((_, i) => {
+            const q = allQuestions[i];
+            return currentChapter.questions.some((cq) => cq.id === q.id);
+          }).length;
+
+          if (questionsAnsweredInChapter >= currentChapterQCount && chapterIndex < chapters.length - 1) {
+            setChapterIndex(chapterIndex + 1);
+            setQuestionIndex(nextIndex);
+            setScreen('chapter-intro');
+          } else {
+            setQuestionIndex(nextIndex);
+          }
+
+          setSelectedAnswer(null);
+          return newAnswers;
+        });
+      }, 500);
+    },
+    [questionIndex, totalQuestions, chapters, chapterIndex, allQuestions]
+  );
 
   const handleNext = useCallback(() => {
     const currentQuestion = allQuestions[questionIndex];
@@ -1226,9 +1274,11 @@ export default function Home() {
     setOpenEndAnswers({});
     setChapterIndex(0);
     setResultType(null);
+    setShowSubmissionSuccess(false);
   }, []);
 
   const handleGiveawayComplete = useCallback(() => {
+    setShowSubmissionSuccess(true);
     setScreen('result');
   }, []);
 
@@ -1285,7 +1335,12 @@ export default function Home() {
 
         {screen === 'result' && resultType && (
           <motion.div key="result" className="min-h-screen">
-            <ResultScreen resultType={resultType} onRestart={handleRestart} configRows={configRows ?? []} />
+            <ResultScreen
+              resultType={resultType}
+              onRestart={handleRestart}
+              configRows={configRows ?? []}
+              showSubmissionSuccess={showSubmissionSuccess}
+            />
           </motion.div>
         )}
       </AnimatePresence>
