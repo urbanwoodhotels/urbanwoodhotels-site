@@ -495,67 +495,138 @@ function ImagesTab() {
   const imageKeys = [
     {
       key: 'hero_bg',
-      label: '首頁背景圖',
+      label: '首頁背景圖（電腦版）',
       defaultUrl:
         'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/hero-bg-XS9H5NH3aLyjCXKGtNcwKc.webp',
     },
-    ...chapters.map((c) => ({
-      key: `chapter_${c.id}_bg`,
-      label: `${c.title}：${c.subtitle} 背景圖`,
-      defaultUrl: c.bgImage,
-    })),
+    {
+      key: 'hero_bg_mobile',
+      label: '首頁背景圖（手機版）',
+      defaultUrl: '',
+    },
+    ...chapters.flatMap((c) => [
+      {
+        key: `chapter_${c.id}_bg`,
+        label: `${c.title}：${c.subtitle} 背景圖（電腦版）`,
+        defaultUrl: c.bgImage,
+      },
+      {
+        key: `chapter_${c.id}_bg_mobile`,
+        label: `${c.title}：${c.subtitle} 背景圖（手機版）`,
+        defaultUrl: '',
+      },
+    ]),
   ];
 
-  const [urls, setUrls] = useState<Record<string, string>>(() =>
-    Object.fromEntries(imageKeys.map((k) => [k.key, k.defaultUrl]))
+  const { data: configRows } = trpc.quiz.getConfig.useQuery();
+
+  const savedMap = useMemo(
+    () => Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue])),
+    [configRows]
   );
 
+  const [urls, setUrls] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const next = Object.fromEntries(
+      imageKeys.map((item) => [item.key, savedMap[item.key] ?? item.defaultUrl])
+    );
+    setUrls(next);
+  }, [configRows]);
+
   const handleSave = (key: string) => {
-    const url = urls[key];
-    if (!url.trim()) {
+    const url = (urls[key] ?? '').trim();
+    if (!url) {
       toast.error('請輸入圖片連結');
       return;
     }
-    setConfigMutation.mutate({ key, value: url.trim() });
+    setConfigMutation.mutate({ key, value: url });
   };
 
   return (
     <div className="space-y-6">
       <p className="text-white/50 text-xs" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-        點擊或拖放圖片直接上傳，上傳後自動儲存。也可手動輸入圖片 URL 再點「儲存」。
+        點擊或拖放圖片直接上傳，上傳後自動壓縮並儲存。也可手動輸入圖片 URL 再點「儲存」。
       </p>
-      {imageKeys.map((item) => (
-        <div key={item.key} className="space-y-2">
-          <label className="block text-[#D4A843]/70 text-[10px] tracking-[0.2em] uppercase font-['DM_Sans']">
-            {item.label}
-          </label>
-          <ImageUploader
-            currentUrl={urls[item.key]}
-            onUploaded={(url) => {
-              setUrls((prev) => ({ ...prev, [item.key]: url }));
-              setConfigMutation.mutate({ key: item.key, value: url });
-            }}
-          />
-          <div className="flex gap-2 mt-1">
-            <input
-              type="url"
-              value={urls[item.key]}
-              onChange={(e) => setUrls((prev) => ({ ...prev, [item.key]: e.target.value }))}
-              placeholder="或手動輸入圖片 URL..."
-              className="flex-1 bg-white/5 border border-[#D4A843]/20 text-white text-xs px-3 py-2 rounded-sm placeholder:text-white/20 focus:outline-none focus:border-[#D4A843]/40 transition-colors"
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
+
+      <p className="text-white/35 text-[10px]" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+        如未上傳手機版圖片，前台會自動使用電腦版圖片，不會出錯。
+      </p>
+
+      {imageKeys.map((item) => {
+        const isMobileVersion = item.key.endsWith('_mobile');
+        const desktopFallbackKey =
+          item.key === 'hero_bg_mobile' ? 'hero_bg' : item.key.replace('_bg_mobile', '_bg');
+
+        const desktopFallbackUrl = urls[desktopFallbackKey] ?? '';
+        const currentUrl = urls[item.key] ?? '';
+
+        return (
+          <div key={item.key} className="space-y-2">
+            <label className="block text-[#D4A843]/70 text-[10px] tracking-[0.2em] uppercase font-['DM_Sans']">
+              {item.label}
+            </label>
+
+            {isMobileVersion && !currentUrl && (
+              <p className="text-white/30 text-[10px]" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                未設定手機版圖片，前台將自動使用電腦版圖片。
+              </p>
+            )}
+
+            <ImageUploader
+              currentUrl={currentUrl}
+              onUploaded={(url) => {
+                setUrls((prev) => ({ ...prev, [item.key]: url }));
+                setConfigMutation.mutate({ key: item.key, value: url });
+              }}
             />
-            <button
-              onClick={() => handleSave(item.key)}
-              disabled={setConfigMutation.isPending}
-              className="px-4 py-2 text-[#0D1B2E] text-xs font-semibold tracking-wider uppercase disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #D4A843, #E8C56A)', fontFamily: "'DM Sans', sans-serif" }}
-            >
-              儲存
-            </button>
+
+            <div className="flex gap-2 mt-1">
+              <input
+                type="url"
+                value={urls[item.key] ?? ''}
+                onChange={(e) => setUrls((prev) => ({ ...prev, [item.key]: e.target.value }))}
+                placeholder={
+                  isMobileVersion
+                    ? '可留空，留空會沿用電腦版圖片'
+                    : '或手動輸入圖片 URL...'
+                }
+                className="flex-1 bg-white/5 border border-[#D4A843]/20 text-white text-xs px-3 py-2 rounded-sm placeholder:text-white/20 focus:outline-none focus:border-[#D4A843]/40 transition-colors"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              />
+
+              <button
+                onClick={() => handleSave(item.key)}
+                disabled={setConfigMutation.isPending || !(urls[item.key] ?? '').trim()}
+                className="px-4 py-2 text-[#0D1B2E] text-xs font-semibold tracking-wider uppercase disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #D4A843, #E8C56A)', fontFamily: "'DM Sans', sans-serif" }}
+              >
+                儲存
+              </button>
+
+              {isMobileVersion && (
+                <button
+                  onClick={() => {
+                    setUrls((prev) => ({ ...prev, [item.key]: '' }));
+                    setConfigMutation.mutate({ key: item.key, value: '' });
+                  }}
+                  disabled={setConfigMutation.isPending}
+                  className="px-4 py-2 text-white/50 text-xs tracking-wider uppercase border border-white/10 hover:border-white/20 hover:text-white/70 transition-colors disabled:opacity-50"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  清空
+                </button>
+              )}
+            </div>
+
+            {isMobileVersion && !currentUrl && desktopFallbackUrl && (
+              <div className="w-full h-24 rounded-sm overflow-hidden border border-white/5">
+                <img src={desktopFallbackUrl} alt="desktop fallback preview" className="w-full h-full object-cover opacity-60" />
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
