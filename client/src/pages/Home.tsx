@@ -34,6 +34,7 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
   const configMap = Object.fromEntries(configRows.map((r) => [r.configKey, r.configValue]));
 
   const extraByChapter: Record<number, import('@/lib/quizData').Question[]> = {};
+
   configRows.forEach((row) => {
     if (row.configKey.startsWith('question_extra_')) {
       try {
@@ -273,14 +274,24 @@ function ChapterIntroScreen({
   onContinue,
   chapters,
   overlayColor,
+  configRows,
 }: {
   chapterIndex: number;
   onContinue: () => void;
   chapters: Chapter[];
   overlayColor?: string;
+  configRows?: { configKey: string; configValue: string }[];
 }) {
   const overlay = overlayColor ?? 'rgba(13,27,46,0.65)';
+  const configMap = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
   const chapter = chapters[chapterIndex];
+
+  const title = configMap[`chapter_${chapter.id}_title`] ?? chapter.title;
+  const subtitle = configMap[`chapter_${chapter.id}_subtitle`] ?? chapter.subtitle;
+  const scene = configMap[`chapter_${chapter.id}_scene`] ?? chapter.scene;
+  const introTitle = configMap[`chapter_${chapter.id}_introTitle`] ?? '';
+  const introText = configMap[`chapter_${chapter.id}_introText`] ?? '';
+  const buttonText = configMap[`chapter_${chapter.id}_buttonText`] ?? '進入場景 →';
 
   return (
     <motion.div
@@ -312,24 +323,41 @@ function ChapterIntroScreen({
       >
         <div className="mb-4 flex items-center gap-3">
           <div className="h-px w-8 bg-[#D4A843]/60" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{chapter.title}</span>
+          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{title}</span>
           <div className="h-px w-8 bg-[#D4A843]/60" />
         </div>
 
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-          {chapter.subtitle}
+          {subtitle}
         </h2>
 
-        <p className="text-[#D4A843]/80 text-sm tracking-widest mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          ✦ {chapter.scene} ✦
+        <p className="text-[#D4A843]/80 text-sm tracking-widest mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          ✦ {scene} ✦
         </p>
+
+        {introTitle && (
+          <p className="text-white/80 text-base md:text-lg mb-2" style={{ fontFamily: "'Noto Serif TC', serif" }}>
+            {introTitle}
+          </p>
+        )}
+
+        {introText && (
+          <p
+            className="text-white/55 text-sm leading-relaxed mb-8 max-w-md"
+            style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+          >
+            {introText}
+          </p>
+        )}
+
+        {!introText && <div className="mb-4" />}
 
         <button
           onClick={onContinue}
           className="px-8 py-3 border border-[#D4A843]/60 text-[#D4A843] text-sm tracking-[0.2em] uppercase hover:bg-[#D4A843]/10 transition-all duration-300"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          進入場景 →
+          {buttonText}
         </button>
       </motion.div>
     </motion.div>
@@ -394,10 +422,7 @@ function QuestionScreen({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${currentChapter.bgImage})` }}
-      />
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${currentChapter.bgImage})` }} />
       <div className="absolute inset-0" style={{ background: overlay }} />
       <DecoCorners />
 
@@ -542,8 +567,7 @@ function GiveawayFormScreen({
   const consentEn =
     cfg['form_consent_en'] ??
     'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
-  const successMsg =
-    cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
+  const successMsg = cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
   const btnSubmitForm = cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
   const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
   const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
@@ -564,6 +588,9 @@ function GiveawayFormScreen({
   const submitMutation = trpc.quiz.submit.useMutation({
     onSuccess: () => {
       setSubmitted(true);
+      setTimeout(() => {
+        onComplete();
+      }, 900);
     },
     onError: (err) => {
       toast.error('提交失敗，請再試一次：' + err.message);
@@ -665,20 +692,12 @@ function GiveawayFormScreen({
               <p className="text-[#D4A843] text-base font-semibold mb-2" style={{ fontFamily: "'Noto Serif TC', serif" }}>
                 {successTitleLabel}
               </p>
-              <p className="text-white/60 text-xs mb-6" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+              <p className="text-white/60 text-xs mb-2" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
                 {successMsg}
               </p>
-              <button
-                onClick={onComplete}
-                className="w-full py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.2em] uppercase"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
-                  fontFamily: "'DM Sans', sans-serif",
-                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-                }}
-              >
-                查看我的登機證 →
-              </button>
+              <p className="text-white/35 text-[11px]" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                正在載入你的登機證...
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -1229,6 +1248,7 @@ export default function Home() {
               chapters={chapters}
               onContinue={handleChapterContinue}
               overlayColor={colors.overlayColor}
+              configRows={configRows ?? []}
             />
           </motion.div>
         )}
