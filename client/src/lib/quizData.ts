@@ -371,9 +371,7 @@ export function calculateResult(answers: AnswerType[]): AnswerType {
   const maxScore = Math.max(...Object.values(scores));
   const tied = (Object.keys(scores) as AnswerType[]).filter((key) => scores[key] === maxScore);
 
-  if (tied.length === 1) {
-    return tied[0];
-  }
+  if (tied.length === 1) return tied[0];
 
   const lastThree = answers.slice(-3);
   const recentScores: Record<AnswerType, number> = {
@@ -394,9 +392,7 @@ export function calculateResult(answers: AnswerType[]): AnswerType {
   const maxRecentScore = Math.max(...tied.map((key) => recentScores[key]));
   const recentTied = tied.filter((key) => recentScores[key] === maxRecentScore);
 
-  if (recentTied.length === 1) {
-    return recentTied[0];
-  }
+  if (recentTied.length === 1) return recentTied[0];
 
   for (let i = answers.length - 1; i >= 0; i--) {
     const answer = answers[i];
