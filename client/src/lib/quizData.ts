@@ -135,7 +135,7 @@ export const chapters: Chapter[] = [
     subtitle: '晨喚與出發',
     scene: '城木酒店內',
     bgImage:
-      'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/hero-bg-XS9H5NH3aLyjCXKGtNcwKc.webp',
+      'https://res.cloudinary.com/defqvpbk4/image/upload/v1776852552/DSC05808_xg2l1l.png',
     questions: [
       {
         id: 1,
