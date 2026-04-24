@@ -70,8 +70,8 @@ export const results: Record<
     id: 'C',
     icon: '📷',
     color: '#E8654A',
-    name: '鏡頭探索家',
-    nameEn: 'Lens Explorer',
+    name: '影像捕捉者',
+    nameEn: 'Visual Storyteller',
     tagline: '用光影記錄，讓瞬間成為故事。',
     frequency: 'Visual · Story · Capture',
     sensoryProfile:
@@ -181,8 +181,8 @@ export const chapters: Chapter[] = [
   {
     id: 2,
     title: 'Chapter 02',
-    subtitle: '舊街與煙火氣',
-    scene: '紅磡舊區',
+    subtitle: '街區漫遊',
+    scene: 'Neighbourhood Walk',
     bgImage:
       'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
     questions: [
@@ -336,6 +336,20 @@ export const chapters: Chapter[] = [
           F: '一首適合與人分享、輕鬆聊天的音樂',
         },
       },
+      {
+        id: 14,
+        text: '你最印象深刻的紅磡美食或景點，請列出原因。',
+        sensoryType: '嗅覺',
+        questionType: 'open-end',
+        options: {
+          A: '',
+          B: '',
+          C: '',
+          D: '',
+          E: '',
+          F: '',
+        },
+      },
     ],
   },
 ];
@@ -350,10 +364,46 @@ export function calculateResult(answers: AnswerType[]): AnswerType {
     F: 0,
   };
 
-  answers.forEach((a) => {
-    scores[a] += 1;
-  });
+  for (const answer of answers) {
+    scores[answer] += 1;
+  }
 
-  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  return sorted[0][0] as AnswerType;
+  const maxScore = Math.max(...Object.values(scores));
+  const tied = (Object.keys(scores) as AnswerType[]).filter((key) => scores[key] === maxScore);
+
+  if (tied.length === 1) {
+    return tied[0];
+  }
+
+  const lastThree = answers.slice(-3);
+  const recentScores: Record<AnswerType, number> = {
+    A: 0,
+    B: 0,
+    C: 0,
+    D: 0,
+    E: 0,
+    F: 0,
+  };
+
+  for (const answer of lastThree) {
+    if (tied.includes(answer)) {
+      recentScores[answer] += 1;
+    }
+  }
+
+  const maxRecentScore = Math.max(...tied.map((key) => recentScores[key]));
+  const recentTied = tied.filter((key) => recentScores[key] === maxRecentScore);
+
+  if (recentTied.length === 1) {
+    return recentTied[0];
+  }
+
+  for (let i = answers.length - 1; i >= 0; i--) {
+    const answer = answers[i];
+    if (recentTied.includes(answer)) {
+      return answer;
+    }
+  }
+
+  return recentTied[0];
 }
