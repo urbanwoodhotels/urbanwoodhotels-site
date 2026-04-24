@@ -1255,42 +1255,42 @@ export default function Home() {
     [questionIndex, totalQuestions, chapters, chapterIndex, allQuestions]
   );
 
-  const handleNext = useCallback(() => {
-    const currentQuestion = allQuestions[questionIndex];
-    const isOpenEnd = currentQuestion?.questionType === 'open-end';
+const handleNext = useCallback(() => {
+  const currentQuestion = allQuestions[questionIndex];
+  const isOpenEnd = currentQuestion?.questionType === 'open-end';
 
-    if (!isOpenEnd && !selectedAnswer) return;
-    if (isOpenEnd && !(openEndAnswers[questionIndex] ?? '').trim()) return;
+  if (!isOpenEnd && !selectedAnswer) return;
+  if (isOpenEnd && !(openEndAnswers[questionIndex] ?? '').trim()) return;
 
-    const answerForScoring: AnswerType = isOpenEnd ? 'A' : selectedAnswer!;
-    const newAnswers = [...answers, answerForScoring];
-    setAnswers(newAnswers);
-    setSelectedAnswer(null);
+  const newAnswers = isOpenEnd ? [...answers] : [...answers, selectedAnswer!];
 
-    const nextIndex = questionIndex + 1;
+  setAnswers(newAnswers);
+  setSelectedAnswer(null);
 
-    if (nextIndex >= totalQuestions) {
-      const result = calculateResult(newAnswers);
-      setResultType(result);
-      setScreen('giveaway-form');
-      return;
-    }
+  const nextIndex = questionIndex + 1;
 
-    const currentChapter = chapters[chapterIndex];
-    const currentChapterQCount = currentChapter.questions.length;
-    const questionsAnsweredInChapter = newAnswers.filter((_, i) => {
-      const q = allQuestions[i];
-      return currentChapter.questions.some((cq) => cq.id === q.id);
-    }).length;
+  if (nextIndex >= totalQuestions) {
+    const result = calculateResult(newAnswers);
+    setResultType(result);
+    setScreen('giveaway-form');
+    return;
+  }
 
-    if (questionsAnsweredInChapter >= currentChapterQCount && chapterIndex < chapters.length - 1) {
-      setChapterIndex(chapterIndex + 1);
-      setQuestionIndex(nextIndex);
-      setScreen('chapter-intro');
-    } else {
-      setQuestionIndex(nextIndex);
-    }
-  }, [selectedAnswer, openEndAnswers, answers, questionIndex, chapterIndex, allQuestions, totalQuestions, chapters]);
+  const currentChapter = chapters[chapterIndex];
+  const currentChapterQCount = currentChapter.questions.length;
+
+  const answeredQuestionIdsInCurrentChapter = allQuestions
+    .slice(0, nextIndex)
+    .filter((q) => currentChapter.questions.some((cq) => cq.id === q.id)).length;
+
+  if (answeredQuestionIdsInCurrentChapter >= currentChapterQCount && chapterIndex < chapters.length - 1) {
+    setChapterIndex(chapterIndex + 1);
+    setQuestionIndex(nextIndex);
+    setScreen('chapter-intro');
+  } else {
+    setQuestionIndex(nextIndex);
+  }
+}, [selectedAnswer, openEndAnswers, answers, questionIndex, chapterIndex, allQuestions, totalQuestions, chapters]);
 
   const handleRestart = useCallback(() => {
     setScreen('landing');
