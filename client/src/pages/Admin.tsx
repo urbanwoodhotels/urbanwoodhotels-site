@@ -550,7 +550,8 @@ function ImagesTab() {
   const stamped = withCacheBust(url);
 setUrls((prev) => ({ ...prev, [key]: stamped }));
 setConfigMutation.mutate({ key, value: stamped });
-
+}; 
+  
   return (
     <div className="space-y-6">
       <p className="text-white/50 text-xs" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
