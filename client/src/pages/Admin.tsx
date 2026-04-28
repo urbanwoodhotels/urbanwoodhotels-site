@@ -37,7 +37,46 @@ function downloadCSV(rows: Record<string, unknown>[], filename: string) {
   a.click();
   URL.revokeObjectURL(url);
 }
+function withCacheBust(url: string) {
+  const value = url.trim();
+  if (!value) return '';
+  if (value.startsWith('data:')) return value;
 
+  try {
+    const parsed = new URL(value);
+    parsed.searchParams.set('v', String(Date.now()));
+    return parsed.toString();
+  } catch {
+    const separator = value.includes('?') ? '&' : '?';
+    return `${value}${separator}v=${Date.now()}`;
+  }
+}
+
+async function uploadToCloudinary(file: File): Promise<string> {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+  if (!cloudName || !uploadPreset) {
+    throw new Error('Cloudinary 尚未設定。請在 Vercel 加 VITE_CLOUDINARY_CLOUD_NAME 及 VITE_CLOUDINARY_UPLOAD_PRESET。');
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', uploadPreset);
+  formData.append('folder', 'urbanwood-quiz');
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error('Cloudinary 上傳失敗');
+  }
+
+  const data = await res.json();
+  return data.secure_url;
+}
 // ─── Image Uploader ──────────────────────────────────────────────────────────
 async function compressImage(
   file: File,
@@ -96,45 +135,54 @@ function ImageUploader({
     setUrlInput(currentUrl ?? '');
   }, [currentUrl]);
 
-  const handleFile = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      toast.error('請選擇圖片檔案');
-      return;
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('圖片不能超過 10MB');
-      return;
-    }
+ const handleFile = async (file: File) => {
+  if (!file.type.startsWith('image/')) {
+    toast.error('請選擇圖片檔案');
+    return;
+  }
 
-    setUploading(true);
-    try {
-      const compressed = await compressImage(file, {
-        maxWidth: 1200,
-        maxHeight: 1200,
-        quality: 0.72,
-        outputType: 'image/jpeg',
-      });
-      setPreview(compressed);
-      setUrlInput(compressed);
-      onUploaded(compressed);
-      toast.success('圖片已自動壓縮並保存！');
-    } catch (err) {
-      toast.error('上傳失敗：' + String(err));
-    } finally {
-      setUploading(false);
-    }
-  };
+  if (file.size > 10 * 1024 * 1024) {
+    toast.error('圖片不能超過 10MB');
+    return;
+  }
 
-  const handleApplyUrl = () => {
-    const value = urlInput.trim();
-    if (!value) {
-      toast.error('請輸入圖片 URL');
-      return;
-    }
-    setPreview(value);
-    onUploaded(value);
-    toast.success('圖片 URL 已更新！');
-  };
+  setUploading(true);
+
+  try {
+    // 🔥 上傳到 Cloudinary
+    const cloudinaryUrl = await uploadToCloudinary(file);
+
+    // 🔥 cache-safe（重要）
+    const stamped = withCacheBust(cloudinaryUrl);
+
+    setPreview(stamped);
+    setUrlInput(stamped);
+    onUploaded(stamped);
+
+    toast.success('圖片已上傳至 Cloudinary！');
+  } catch (err) {
+    toast.error('上傳失敗：' + String(err));
+  } finally {
+    setUploading(false);
+  }
+};
+
+const handleApplyUrl = () => {
+  const value = urlInput.trim();
+
+  if (!value) {
+    toast.error('請輸入圖片 URL');
+    return;
+  }
+
+  const stamped = withCacheBust(value);
+
+  setPreview(stamped);
+  setUrlInput(stamped);
+  onUploaded(stamped);
+
+  toast.success('圖片 URL 已更新！');
+};
 
   return (
     <div className="space-y-3">
@@ -540,8 +588,9 @@ function ImagesTab() {
       toast.error('請輸入圖片連結');
       return;
     }
-    setConfigMutation.mutate({ key, value: url });
-  };
+  const stamped = withCacheBust(url);
+setUrls((prev) => ({ ...prev, [key]: stamped }));
+setConfigMutation.mutate({ key, value: stamped });
 
   return (
     <div className="space-y-6">
@@ -964,7 +1013,7 @@ function ResultsTab() {
   const resultLabels: Record<ResultId, string> = {
     A: '慢活療癒者',
     B: '街坊美食家',
-    C: '鏡頭探索家',
+    C: '影像捕捉者',
     D: '城市探索者',
     E: '夜行感知者',
     F: '城市連結者',
