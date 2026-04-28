@@ -295,8 +295,7 @@ export const chapters: Chapter[] = [
     subtitle: '夜歸與回味',
     scene: '回到城木酒店',
     bgImage:
-      'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
-    questions: [
+      'https://res.cloudinary.com/defqvpbk4/image/upload/v1777347279/urbanwood-quiz/mwa0c8st6u6cuqxxvdyy.png?v=1777347280217: [
       {
         id: 11,
         text: '結束一天的紅磡探索，晚上回到酒店房內，你最想做什麼？',
