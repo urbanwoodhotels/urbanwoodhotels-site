@@ -295,7 +295,8 @@ export const chapters: Chapter[] = [
     subtitle: '夜歸與回味',
     scene: '回到城木酒店',
     bgImage:
-      'https://res.cloudinary.com/defqvpbk4/image/upload/v1777347279/urbanwood-quiz/mwa0c8st6u6cuqxxvdyy.png?v=1777347280217: [
+      'https://res.cloudinary.com/defqvpbk4/image/upload/v1777347279/urbanwood-quiz/mwa0c8st6u6cuqxxvdyy.png?v=1777347280217',
+    questions: [
       {
         id: 11,
         text: '結束一天的紅磡探索，晚上回到酒店房內，你最想做什麼？',
@@ -333,20 +334,6 @@ export const chapters: Chapter[] = [
           D: '一段帶有城市節奏感的聲音',
           E: '一首氛圍感強的電子 / ambient 音樂',
           F: '一首適合與人分享、輕鬆聊天的音樂',
-        },
-      },
-      {
-        id: 14,
-        text: '你最印象深刻的紅磡美食或景點，請列出原因。',
-        sensoryType: '嗅覺',
-        questionType: 'open-end',
-        options: {
-          A: '',
-          B: '',
-          C: '',
-          D: '',
-          E: '',
-          F: '',
         },
       },
     ],
