@@ -78,9 +78,6 @@ async function uploadToCloudinary(file: File): Promise<string> {
   return data.secure_url;
 }
 // ─── Image Uploader ──────────────────────────────────────────────────────────
-  return canvas.toDataURL(outputType, quality);
-}
-
 function ImageUploader({
   onUploaded,
   currentUrl,
