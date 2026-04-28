@@ -78,44 +78,6 @@ async function uploadToCloudinary(file: File): Promise<string> {
   return data.secure_url;
 }
 // ─── Image Uploader ──────────────────────────────────────────────────────────
-async function compressImage(
-  file: File,
-  options?: {
-    maxWidth?: number;
-    maxHeight?: number;
-    quality?: number;
-    outputType?: 'image/jpeg' | 'image/webp';
-  }
-): Promise<string> {
-  const { maxWidth = 1200, maxHeight = 1200, quality = 0.72, outputType = 'image/jpeg' } = options || {};
-
-  const dataUrl = await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result ?? ''));
-    reader.onerror = () => reject(new Error('讀取圖片失敗'));
-    reader.readAsDataURL(file);
-  });
-
-  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error('圖片載入失敗'));
-    image.src = dataUrl;
-  });
-
-  let { width, height } = img;
-  const scale = Math.min(1, maxWidth / width, maxHeight / height);
-  width = Math.round(width * scale);
-  height = Math.round(height * scale);
-
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('無法處理圖片');
-
-  ctx.drawImage(img, 0, 0, width, height);
   return canvas.toDataURL(outputType, quality);
 }
 
