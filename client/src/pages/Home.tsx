@@ -1243,7 +1243,7 @@ export default function Home() {
           className="px-3 py-1 text-xs border border-[#D4A843]/50 text-[#D4A843] bg-[#0D1B2E]/60 backdrop-blur rounded-sm font-['DM_Sans']"
         >
           {lang === 'zh' ? 'EN' : '中文'}
-        </button
+        </button>
       </div>
 
       <AnimatePresence mode="wait">
