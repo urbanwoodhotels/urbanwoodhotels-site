@@ -4,11 +4,12 @@
  * Screens: Landing → Chapter Intro → Questions → Result (Boarding Pass)
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { chapters as staticChapters, results, calculateResult, type AnswerType, type Chapter } from '@/lib/quizData';
+import { chapterCopyEn, landingCopy, optionsEn, questionTextEn, resultCopyEn, sensoryLabel, uiCopyEn, type Lang } from '@/lib/i18n';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function shuffleArray<T>(array: T[]): T[] {
@@ -20,21 +21,6 @@ function shuffleArray<T>(array: T[]): T[] {
   return copied;
 }
 
-function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < breakpoint : false
-  );
-
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < breakpoint);
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, [breakpoint]);
-
-  return isMobile;
-}
-
 // ─── Apply admin config overrides to static data ─────────────────────────────
 function extractColors(configRows: { configKey: string; configValue: string }[]) {
   const configMap = Object.fromEntries(configRows.map((r) => [r.configKey, r.configValue]));
@@ -44,15 +30,11 @@ function extractColors(configRows: { configKey: string; configValue: string }[])
   };
 }
 
-function applyConfig(
-  configRows: { configKey: string; configValue: string }[],
-  isMobile = false
-): Chapter[] {
+function applyConfig(configRows: { configKey: string; configValue: string }[]): Chapter[] {
   if (!configRows.length) return staticChapters;
   const configMap = Object.fromEntries(configRows.map((r) => [r.configKey, r.configValue]));
 
   const extraByChapter: Record<number, import('@/lib/quizData').Question[]> = {};
-
   configRows.forEach((row) => {
     if (row.configKey.startsWith('question_extra_')) {
       try {
@@ -67,14 +49,12 @@ function applyConfig(
           E?: string;
           F?: string;
           sensoryType: '視覺' | '聽覺' | '嗅覺' | '觸覺';
-          questionType?: 'multiple-choice' | 'open-end';
         };
 
         const q: import('@/lib/quizData').Question = {
           id: parsed.id,
           text: parsed.text,
           sensoryType: parsed.sensoryType,
-          questionType: parsed.questionType ?? 'multiple-choice',
           options: {
             A: parsed.A,
             B: parsed.B,
@@ -94,12 +74,8 @@ function applyConfig(
   });
 
   return staticChapters.map((chapter) => {
-    const desktopBgKey = `chapter_${chapter.id}_bg`;
-    const mobileBgKey = `chapter_${chapter.id}_bg_mobile`;
-
-    const updatedBg = isMobile
-      ? configMap[mobileBgKey] ?? configMap[desktopBgKey] ?? chapter.bgImage
-      : configMap[desktopBgKey] ?? chapter.bgImage;
+    const bgKey = `chapter_${chapter.id}_bg`;
+    const updatedBg = configMap[bgKey] ?? chapter.bgImage;
 
     const updatedQuestions = chapter.questions.map((q) => {
       const qKey = `question_${q.id}`;
@@ -185,13 +161,15 @@ function LandingScreen({
   onStart,
   heroBg,
   configRows,
+  lang,
 }: {
   onStart: () => void;
   heroBg: string;
   configRows?: { configKey: string; configValue: string }[];
+  lang: Lang;
 }) {
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
-  const btnStart = cfg['btn_start'] ?? '開始測驗';
+  const btnStart = lang === 'en' ? landingCopy.startEn : cfg['btn_start'] ?? landingCopy.startZh;
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -222,7 +200,7 @@ function LandingScreen({
           transition={{ delay: 0.3, duration: 0.6, type: 'spring', stiffness: 200 }}
         >
           <span className="text-[#D4A843] text-2xl font-bold font-['Playfair_Display'] leading-none">2</span>
-          <span className="text-[#D4A843] text-[9px] tracking-[0.2em] font-['DM_Sans'] uppercase">周年</span>
+          <span className="text-[#D4A843] text-[9px] tracking-[0.2em] font-['DM_Sans'] uppercase">{lang === 'en' ? landingCopy.anniversaryEn : landingCopy.anniversaryZh}</span>
         </motion.div>
 
         <motion.h1
@@ -232,9 +210,9 @@ function LandingScreen({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
         >
-          你是哪種
+          {lang === 'en' ? landingCopy.titleEnLine1 : landingCopy.titleZhLine1}
           <br />
-          <span className="text-[#D4A843]">紅磡旅人</span>？
+          <span className="text-[#D4A843]">{lang === 'en' ? landingCopy.titleEnHighlight : landingCopy.titleZhHighlight}</span>{lang === 'en' ? landingCopy.titleEnSuffix : landingCopy.titleZhSuffix}
         </motion.h1>
 
         <motion.p
@@ -244,7 +222,7 @@ function LandingScreen({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          跟隨第一身視角，從城木酒店出發
+          {lang === 'en' ? landingCopy.subtitleEn : landingCopy.subtitleZh}
         </motion.p>
 
         <motion.p
@@ -254,9 +232,9 @@ function LandingScreen({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          穿梭紅磡舊街、海濱與隱世角落
+          {lang === 'en' ? landingCopy.descriptionEnLine1 : landingCopy.descriptionZhLine1}
           <br />
-          回答 13 條感官問題，領取你的專屬登機證
+          {lang === 'en' ? landingCopy.descriptionEnLine2 : landingCopy.descriptionZhLine2}
         </motion.p>
 
         <motion.button
@@ -298,24 +276,19 @@ function ChapterIntroScreen({
   onContinue,
   chapters,
   overlayColor,
-  configRows,
+  lang,
 }: {
   chapterIndex: number;
   onContinue: () => void;
   chapters: Chapter[];
   overlayColor?: string;
-  configRows?: { configKey: string; configValue: string }[];
+  lang: Lang;
 }) {
   const overlay = overlayColor ?? 'rgba(13,27,46,0.65)';
-  const configMap = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
   const chapter = chapters[chapterIndex];
-
-  const title = configMap[`chapter_${chapter.id}_title`] ?? chapter.title;
-  const subtitle = configMap[`chapter_${chapter.id}_subtitle`] ?? chapter.subtitle;
-  const scene = configMap[`chapter_${chapter.id}_scene`] ?? chapter.scene;
-  const introTitle = configMap[`chapter_${chapter.id}_introTitle`] ?? '';
-  const introText = configMap[`chapter_${chapter.id}_introText`] ?? '';
-  const buttonText = configMap[`chapter_${chapter.id}_buttonText`] ?? '進入場景 →';
+  const chapterSubtitle = lang === 'en' ? chapterCopyEn[chapter.id]?.subtitle ?? chapter.subtitle : chapter.subtitle;
+  const chapterScene = lang === 'en' ? chapterCopyEn[chapter.id]?.scene ?? chapter.scene : chapter.scene;
+  const chapterButton = lang === 'en' ? chapterCopyEn[chapter.id]?.button ?? 'Enter Scene →' : '進入場景 →';
 
   return (
     <motion.div
@@ -347,41 +320,24 @@ function ChapterIntroScreen({
       >
         <div className="mb-4 flex items-center gap-3">
           <div className="h-px w-8 bg-[#D4A843]/60" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{title}</span>
+          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{chapter.title}</span>
           <div className="h-px w-8 bg-[#D4A843]/60" />
         </div>
 
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-          {subtitle}
+          {chapterSubtitle}
         </h2>
 
-        <p className="text-[#D4A843]/80 text-sm tracking-widest mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          ✦ {scene} ✦
+        <p className="text-[#D4A843]/80 text-sm tracking-widest mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          ✦ {chapterScene} ✦
         </p>
-
-        {introTitle && (
-          <p className="text-white/80 text-base md:text-lg mb-2" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-            {introTitle}
-          </p>
-        )}
-
-        {introText && (
-          <p
-            className="text-white/55 text-sm leading-relaxed mb-8 max-w-md"
-            style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-          >
-            {introText}
-          </p>
-        )}
-
-        {!introText && <div className="mb-4" />}
 
         <button
           onClick={onContinue}
           className="px-8 py-3 border border-[#D4A843]/60 text-[#D4A843] text-sm tracking-[0.2em] uppercase hover:bg-[#D4A843]/10 transition-all duration-300"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          {buttonText}
+          進入場景 →
         </button>
       </motion.div>
     </motion.div>
@@ -402,6 +358,7 @@ function QuestionScreen({
   overlayColor,
   questionCardBg,
   configRows,
+  lang,
 }: {
   questionIndex: number;
   selectedAnswer: AnswerType | null;
@@ -415,6 +372,7 @@ function QuestionScreen({
   overlayColor?: string;
   questionCardBg?: string;
   configRows?: { configKey: string; configValue: string }[];
+  lang: Lang;
 }) {
   const overlay = overlayColor ?? 'rgba(13,27,46,0.75)';
   const cardBg = questionCardBg ?? 'rgba(13,27,46,0.75)';
@@ -423,6 +381,9 @@ function QuestionScreen({
   const btnLastQuestion = cfg['btn_last_question'] ?? '查看結果 ✶';
   const question = allQuestions[questionIndex];
   const currentChapter = chapters.find((c) => c.questions.some((q) => q.id === question.id))!;
+  const displayQuestionText = lang === 'en' ? questionTextEn[question.id] ?? question.text : question.text;
+  const displayChapterSubtitle = lang === 'en' ? chapterCopyEn[currentChapter.id]?.subtitle ?? currentChapter.subtitle : currentChapter.subtitle;
+  const displaySensoryType = lang === 'en' ? sensoryLabel[question.sensoryType] ?? question.sensoryType : question.sensoryType;
 
   const sensoryColors: Record<string, string> = {
     視覺: '#E8654A',
@@ -446,7 +407,10 @@ function QuestionScreen({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${currentChapter.bgImage})` }} />
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${currentChapter.bgImage})` }}
+      />
       <div className="absolute inset-0" style={{ background: overlay }} />
       <DecoCorners />
 
@@ -462,10 +426,10 @@ function QuestionScreen({
               background: `${sensoryColors[question.sensoryType]}15`,
             }}
           >
-            {question.sensoryType}
+            {displaySensoryType}
           </span>
           <span className="text-white/40 text-xs font-['DM_Sans']">
-            {currentChapter.title} · {currentChapter.subtitle}
+            {currentChapter.title} · {displayChapterSubtitle}
           </span>
         </div>
       </div>
@@ -478,7 +442,7 @@ function QuestionScreen({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          {question.text}
+          {displayQuestionText}
         </motion.h2>
 
         {question.questionType === 'open-end' ? (
@@ -487,7 +451,7 @@ function QuestionScreen({
               value={openEndAnswer ?? ''}
               onChange={(e) => onOpenEndAnswer?.(e.target.value)}
               rows={4}
-              placeholder="請輸入您的回答..."
+              placeholder={lang === 'en' ? uiCopyEn.textareaPlaceholder : '請輸入您的回答...'}
               className="w-full px-5 py-4 rounded-sm text-sm leading-relaxed resize-none focus:outline-none"
               style={{
                 background: cardBg,
@@ -529,15 +493,15 @@ function QuestionScreen({
                     color: selectedAnswer === opt ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.75)',
                   }}
                 >
-                  {text}
+                  {lang === 'en' ? optionsEn[question.id]?.[opt] ?? text : text}
                 </span>
               </motion.button>
             ))}
           </div>
         )}
 
-        {question.questionType === 'open-end' && (openEndAnswer ?? '').trim().length > 0 && (
-          <AnimatePresence>
+        <AnimatePresence>
+          {(question.questionType === 'open-end' ? (openEndAnswer ?? '').trim().length > 0 : !!selectedAnswer) && (
             <motion.div
               className="mt-8 flex justify-end"
               initial={{ opacity: 0, y: 10 }}
@@ -553,11 +517,11 @@ function QuestionScreen({
                   clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
                 }}
               >
-                {questionIndex === totalQuestions - 1 ? btnLastQuestion : btnNext}
+                {questionIndex === totalQuestions - 1 ? (lang === 'en' ? uiCopyEn.result : btnLastQuestion) : (lang === 'en' ? uiCopyEn.next : btnNext)}
               </button>
             </motion.div>
-          </AnimatePresence>
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
@@ -569,11 +533,13 @@ function GiveawayFormScreen({
   onComplete,
   configRows,
   openEndAnswers,
+  lang,
 }: {
   resultType: AnswerType;
   onComplete: () => void;
   configRows?: { configKey: string; configValue: string }[];
   openEndAnswers?: Record<number, string>;
+  lang: Lang;
 }) {
   const result = results[resultType];
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
@@ -591,24 +557,28 @@ function GiveawayFormScreen({
   const consentEn =
     cfg['form_consent_en'] ??
     'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
-  const btnSubmitForm = cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
-  const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
-  const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
+  const successMsg =
+    cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
+  const btnSubmitForm = lang === 'en' ? uiCopyEn.submitForm : cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
+  const almostThereLabel = lang === 'en' ? uiCopyEn.almostThere : cfg['form_almost_there_label'] ?? 'Almost There';
+  const travelerTypeLabel = lang === 'en' ? uiCopyEn.travellerType : cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
+  const successTitleLabel = lang === 'en' ? uiCopyEn.submissionSuccessTitle : cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
   const platformFieldLabel =
-    cfg['form_platform_field_label'] ?? '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
-  const socialHandleFieldLabel = cfg['form_social_handle_field_label'] ?? '2. 社交平台用戶名稱 Social Media Username';
-  const nameFieldLabel = cfg['form_name_field_label'] ?? '3. 姓名 Name';
-  const emailFieldLabel = cfg['form_email_field_label'] ?? '4. 電郵地址 Email Address';
+    lang === 'en' ? uiCopyEn.platformField : cfg['form_platform_field_label'] ?? '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
+  const socialHandleFieldLabel = lang === 'en' ? uiCopyEn.socialHandleField : cfg['form_social_handle_field_label'] ?? '2. 社交平台用戶名稱 Social Media Username';
+  const nameFieldLabel = lang === 'en' ? uiCopyEn.nameField : cfg['form_name_field_label'] ?? '3. 姓名 Name';
+  const emailFieldLabel = lang === 'en' ? uiCopyEn.emailField : cfg['form_email_field_label'] ?? '4. 電郵地址 Email Address';
 
   const [platform, setPlatform] = useState<'instagram' | 'facebook' | ''>('');
   const [socialHandle, setSocialHandle] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [marketingConsent, setMarketingConsent] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const submitMutation = trpc.quiz.submit.useMutation({
     onSuccess: () => {
-      onComplete();
+      setSubmitted(true);
     },
     onError: (err) => {
       toast.error('提交失敗，請再試一次：' + err.message);
@@ -690,7 +660,7 @@ function GiveawayFormScreen({
             <div>
               <p className="text-[#D4A843]/60 text-[10px] tracking-[0.2em] font-['DM_Sans'] uppercase mb-0.5">{travelerTypeLabel}</p>
               <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-                {result.name}
+                {lang === 'en' ? result.nameEn : result.name}
               </h2>
             </div>
           </div>
@@ -704,136 +674,159 @@ function GiveawayFormScreen({
             boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
           }}
         >
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div
-              className="rounded-sm p-4 mb-2"
-              style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
-            >
-              <p className="text-white/80 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                {introZh}
+          {submitted ? (
+            <div className="text-center py-4">
+              <div className="text-4xl mb-3">🎫</div>
+              <p className="text-[#D4A843] text-base font-semibold mb-2" style={{ fontFamily: "'Noto Serif TC', serif" }}>
+                {successTitleLabel}
               </p>
-              <p className="text-white/50 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                {introEn}
+              <p className="text-white/60 text-xs mb-6" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                {successMsg}
               </p>
-              <a
-                href={termsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#D4A843] text-xs underline underline-offset-2 hover:text-[#E8C56A] transition-colors"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              <button
+                onClick={onComplete}
+                className="w-full py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.2em] uppercase"
+                style={{
+                  background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
+                  fontFamily: "'DM Sans', sans-serif",
+                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+                }}
               >
-                {termsLabel} ↗
-              </a>
+                查看我的登機證 →
+              </button>
             </div>
-
-            <div>
-              <label className={labelClass}>{platformFieldLabel}</label>
-              <div className="flex gap-3">
-                {(['instagram', 'facebook'] as const).map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => setPlatform(p)}
-                    className="flex-1 py-2.5 text-xs tracking-wider uppercase transition-all rounded-sm"
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      border: platform === p ? '1px solid #D4A843' : '1px solid rgba(212,168,67,0.2)',
-                      color: platform === p ? '#D4A843' : 'rgba(255,255,255,0.4)',
-                      background: platform === p ? 'rgba(212,168,67,0.1)' : 'transparent',
-                    }}
-                  >
-                    {p === 'instagram' ? 'Instagram' : 'Facebook'}
-                  </button>
-                ))}
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div
+                className="rounded-sm p-4 mb-2"
+                style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
+              >
+                <p className="text-white/80 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                  {lang === 'en' ? introEn : introZh}
+                </p>
+                <p className="text-white/50 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                  {introEn}
+                </p>
+                <a
+                  href={termsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#D4A843] text-xs underline underline-offset-2 hover:text-[#E8C56A] transition-colors"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  {termsLabel} ↗
+                </a>
               </div>
-            </div>
 
-            <div>
-              <label className={labelClass}>{socialHandleFieldLabel}</label>
-              <input
-                type="text"
-                value={socialHandle}
-                onChange={(e) => setSocialHandle(e.target.value)}
-                placeholder={platform === 'facebook' ? 'Facebook 帳戶名稱' : '@yourhandle'}
-                className={inputClass}
-                style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-              />
-            </div>
+              <div>
+                <label className={labelClass}>{platformFieldLabel}</label>
+                <div className="flex gap-3">
+                  {(['instagram', 'facebook'] as const).map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setPlatform(p)}
+                      className="flex-1 py-2.5 text-xs tracking-wider uppercase transition-all rounded-sm"
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        border: platform === p ? '1px solid #D4A843' : '1px solid rgba(212,168,67,0.2)',
+                        color: platform === p ? '#D4A843' : 'rgba(255,255,255,0.4)',
+                        background: platform === p ? 'rgba(212,168,67,0.1)' : 'transparent',
+                      }}
+                    >
+                      {p === 'instagram' ? 'Instagram' : 'Facebook'}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-            <div>
-              <label className={labelClass}>{nameFieldLabel}</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your Name"
-                className={inputClass}
-                style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-              />
-            </div>
+              <div>
+                <label className={labelClass}>{socialHandleFieldLabel}</label>
+                <input
+                  type="text"
+                  value={socialHandle}
+                  onChange={(e) => setSocialHandle(e.target.value)}
+                  placeholder={platform === 'facebook' ? (lang === 'en' ? uiCopyEn.facebookPlaceholder : 'Facebook 帳戶名稱') : uiCopyEn.instagramPlaceholder}
+                  className={inputClass}
+                  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+                />
+              </div>
 
-            <div>
-              <label className={labelClass}>{emailFieldLabel}</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className={inputClass}
-                style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-              />
-            </div>
+              <div>
+                <label className={labelClass}>{nameFieldLabel}</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your Name"
+                  className={inputClass}
+                  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+                />
+              </div>
 
-            <div
-              className="rounded-sm p-3"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
-              <label className="flex items-start gap-3 cursor-pointer">
-                <div className="relative flex-shrink-0 mt-0.5">
-                  <input
-                    type="checkbox"
-                    checked={marketingConsent}
-                    onChange={(e) => setMarketingConsent(e.target.checked)}
-                    className="sr-only"
-                  />
-                  <div
-                    className="w-4 h-4 rounded-sm border flex items-center justify-center transition-all"
-                    style={{
-                      borderColor: marketingConsent ? '#D4A843' : 'rgba(212,168,67,0.3)',
-                      background: marketingConsent ? 'rgba(212,168,67,0.2)' : 'transparent',
-                    }}
-                  >
-                    {marketingConsent && (
-                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path d="M1 4L3.5 6.5L9 1" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
+              <div>
+                <label className={labelClass}>{emailFieldLabel}</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className={inputClass}
+                  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+                />
+              </div>
+
+              <div
+                className="rounded-sm p-3"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <div className="relative flex-shrink-0 mt-0.5">
+                    <input
+                      type="checkbox"
+                      checked={marketingConsent}
+                      onChange={(e) => setMarketingConsent(e.target.checked)}
+                      className="sr-only"
+                    />
+                    <div
+                      className="w-4 h-4 rounded-sm border flex items-center justify-center transition-all"
+                      style={{
+                        borderColor: marketingConsent ? '#D4A843' : 'rgba(212,168,67,0.3)',
+                        background: marketingConsent ? 'rgba(212,168,67,0.2)' : 'transparent',
+                      }}
+                    >
+                      {marketingConsent && (
+                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                          <path d="M1 4L3.5 6.5L9 1" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <p className="text-white/70 text-[11px] leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                    {consentZh}
-                  </p>
-                  <p className="text-white/40 text-[10px] leading-relaxed mt-1" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                    {consentEn}
-                  </p>
-                </div>
-              </label>
-            </div>
+                  <div>
+                    <p className="text-white/70 text-[11px] leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                      {lang === 'en' ? consentEn : consentZh}
+                    </p>
+                    <p className="text-white/40 text-[10px] leading-relaxed mt-1" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
+                      {consentEn}
+                    </p>
+                  </div>
+                </label>
+              </div>
 
-            <button
-              type="submit"
-              disabled={submitMutation.isPending}
-              className="w-full py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.2em] uppercase transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
-              style={{
-                background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
-                fontFamily: "'DM Sans', sans-serif",
-                clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-              }}
-            >
-              {submitMutation.isPending ? '提交中...' : `✶ ${btnSubmitForm}`}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={submitMutation.isPending}
+                className="w-full py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.2em] uppercase transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                style={{
+                  background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
+                  fontFamily: "'DM Sans', sans-serif",
+                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+                }}
+              >
+                {submitMutation.isPending ? (lang === 'en' ? uiCopyEn.submitting : '提交中...') : `✶ ${btnSubmitForm}`}
+              </button>
+            </form>
+          )}
         </div>
       </motion.div>
     </motion.div>
@@ -845,34 +838,34 @@ function ResultScreen({
   resultType,
   onRestart,
   configRows,
-  showSubmissionSuccess,
+  lang,
 }: {
   resultType: AnswerType;
   onRestart: () => void;
   configRows?: { configKey: string; configValue: string }[];
-  showSubmissionSuccess?: boolean;
+  lang: Lang;
 }) {
   const baseResult = results[resultType];
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
+  const resultEnCopy = resultCopyEn[resultType];
   const result = {
     ...baseResult,
-    name: cfg[`result_${resultType}_name`] ?? baseResult.name,
+    name: lang === 'en' ? baseResult.nameEn : cfg[`result_${resultType}_name`] ?? baseResult.name,
     nameEn: cfg[`result_${resultType}_nameEn`] ?? baseResult.nameEn,
-    tagline: cfg[`result_${resultType}_tagline`] ?? baseResult.tagline,
-    sensoryProfile: cfg[`result_${resultType}_sensoryProfile`] ?? baseResult.sensoryProfile,
-    urbanwoodMatch: cfg[`result_${resultType}_urbanwoodMatch`] ?? baseResult.urbanwoodMatch,
-    resultImage: cfg[`result_${resultType}_resultImage`] ?? baseResult.resultImage ?? '',
+    tagline: lang === 'en' ? resultEnCopy.tagline : cfg[`result_${resultType}_tagline`] ?? baseResult.tagline,
+    sensoryProfile: lang === 'en' ? resultEnCopy.sensoryProfile : cfg[`result_${resultType}_sensoryProfile`] ?? baseResult.sensoryProfile,
+    urbanwoodMatch: lang === 'en' ? resultEnCopy.urbanwoodMatch : cfg[`result_${resultType}_urbanwoodMatch`] ?? baseResult.urbanwoodMatch,
+    resultImage: lang === 'en'
+      ? cfg[`result_${resultType}_resultImageEn`] ?? baseResult.resultImageEn ?? cfg[`result_${resultType}_resultImage`] ?? baseResult.resultImage ?? ''
+      : cfg[`result_${resultType}_resultImage`] ?? baseResult.resultImage ?? '',
   };
   const boardingPassImage = cfg[`result_${resultType}_boardingPassImage`] ?? '';
-  const btnShare = cfg['btn_share'] ?? '📤 分享我的登機證';
-  const btnSaveBoardingPass = cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
-  const btnBookHotel = cfg['btn_book_hotel'] ?? '🏨 立即預訂城木紅磡';
+  const btnShare = lang === 'en' ? uiCopyEn.share : cfg['btn_share'] ?? '📤 分享我的登機證';
+  const btnSaveBoardingPass = lang === 'en' ? uiCopyEn.saveImage : cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
+  const btnBookHotel = lang === 'en' ? uiCopyEn.bookHotel : cfg['btn_book_hotel'] ?? '🏨 立即預訂城木紅磡';
   const btnBookHotelUrl = cfg['btn_book_hotel_url'] ?? 'https://urbanwoodhotels.com/hk/global_hotels/hung-hom-hk/';
-  const btnRestart = cfg['btn_restart'] ?? '重新測驗';
-  const resultShareHint = cfg['result_share_hint'] ?? '分享至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！';
-  const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
-  const successMsg = cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
-
+  const btnRestart = lang === 'en' ? uiCopyEn.restart : cfg['btn_restart'] ?? '重新測驗';
+  const resultShareHint = lang === 'en' ? uiCopyEn.shareHint : cfg['result_share_hint'] ?? '分享至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！';
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -904,7 +897,9 @@ function ResultScreen({
   };
 
   const handleShare = () => {
-    const text = `我係「${result.name}」(${result.nameEn})！${result.tagline}\n\n城木酒店紅磡 2 周年感官測驗 🎫\n#城木2周年 #紅磡旅人 @urbanwoodhotels`;
+    const text = lang === 'en'
+      ? `I am a "${result.name}"! ${result.tagline}\n\nUrbanwood Hotel Hung Hom 2nd Anniversary Sensory Quiz 🎫\n#Urbanwood2ndAnniversary #HungHomTraveller @urbanwoodhotels`
+      : `我係「${result.name}」(${result.nameEn})！${result.tagline}\n\n城木酒店紅磡 2 周年感官測驗 🎫\n#城木2周年 #紅磡旅人 @urbanwoodhotels`;
     if (navigator.share) {
       navigator.share({ text });
     } else {
@@ -941,34 +936,9 @@ function ResultScreen({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.8, type: 'spring', stiffness: 100 }}
       >
-        {showSubmissionSuccess && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 rounded-sm px-4 py-3 text-center"
-            style={{
-              background: 'rgba(212,168,67,0.10)',
-              border: '1px solid rgba(212,168,67,0.35)',
-            }}
-          >
-            <p
-              className="text-[#D4A843] text-sm font-semibold mb-1"
-              style={{ fontFamily: "'Noto Serif TC', serif" }}
-            >
-              {successTitleLabel}
-            </p>
-            <p
-              className="text-white/55 text-xs"
-              style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-            >
-              {successMsg}
-            </p>
-          </motion.div>
-        )}
-
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-[#D4A843]/40" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">Boarding Pass · 登機證</span>
+          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{lang === 'en' ? uiCopyEn.boardingPassLabel : 'Boarding Pass · 登機證'}</span>
           <div className="h-px flex-1 bg-[#D4A843]/40" />
         </div>
 
@@ -1002,7 +972,7 @@ function ResultScreen({
             <div className="px-6 pt-6 pb-4">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[#D4A843]/60 text-[10px] tracking-[0.25em] font-['DM_Sans'] uppercase mb-1">Passenger Type</p>
+                  <p className="text-[#D4A843]/60 text-[10px] tracking-[0.25em] font-['DM_Sans'] uppercase mb-1">{lang === 'en' ? uiCopyEn.passengerType : 'Passenger Type'}</p>
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{result.icon}</span>
                     <div>
@@ -1083,7 +1053,7 @@ function ResultScreen({
               </div>
 
               <div className="mb-4">
-                <p className="text-[#D4A843]/50 text-[9px] tracking-[0.2em] font-['DM_Sans'] uppercase mb-1.5">Sensory Profile · 感官特質</p>
+                <p className="text-[#D4A843]/50 text-[9px] tracking-[0.2em] font-['DM_Sans'] uppercase mb-1.5">{lang === 'en' ? uiCopyEn.sensoryProfileLabel : 'Sensory Profile · 感官特質'}</p>
                 <p className="text-white/70 text-xs leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
                   {result.sensoryProfile}
                 </p>
@@ -1128,7 +1098,7 @@ function ResultScreen({
               clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)',
             }}
           >
-            {copied ? '✓ 已複製！' : btnShare}
+            {copied ? (lang === 'en' ? uiCopyEn.copied : '✓ 已複製！') : btnShare}
           </button>
 
           <button
@@ -1142,7 +1112,7 @@ function ResultScreen({
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            {saving ? '正在儲存...' : btnSaveBoardingPass}
+            {saving ? (lang === 'en' ? uiCopyEn.saving : '正在儲存...') : btnSaveBoardingPass}
           </button>
 
           <div className="text-center">
@@ -1188,21 +1158,17 @@ export default function Home() {
   const [openEndAnswers, setOpenEndAnswers] = useState<Record<number, string>>({});
   const [chapterIndex, setChapterIndex] = useState(0);
   const [resultType, setResultType] = useState<AnswerType | null>(null);
-  const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
-
-  const isMobile = useIsMobile();
+  const [lang, setLang] = useState<Lang>('zh');
 
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
-  const chapters = useMemo(() => applyConfig(configRows ?? [], isMobile), [configRows, isMobile]);
+  const chapters = useMemo(() => applyConfig(configRows ?? []), [configRows]);
   const allQuestions = useMemo(() => chapters.flatMap((c) => c.questions), [chapters]);
   const totalQuestions = allQuestions.length;
 
   const heroBg = useMemo(() => {
-    const map = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
-    return isMobile
-      ? map['hero_bg_mobile'] ?? map['hero_bg'] ?? HERO_BG
-      : map['hero_bg'] ?? HERO_BG;
-  }, [configRows, isMobile]);
+    const row = configRows?.find((r) => r.configKey === 'hero_bg');
+    return row?.configValue ?? HERO_BG;
+  }, [configRows]);
 
   const colors = useMemo(() => extractColors(configRows ?? []), [configRows]);
 
@@ -1215,82 +1181,45 @@ export default function Home() {
     setScreen('question');
   }, []);
 
-  const handleAnswer = useCallback(
-    (answer: AnswerType) => {
-      setSelectedAnswer(answer);
+  const handleAnswer = useCallback((answer: AnswerType) => {
+    setSelectedAnswer(answer);
+  }, []);
 
-      setTimeout(() => {
-        setAnswers((prevAnswers) => {
-          const newAnswers = [...prevAnswers, answer];
-          const nextIndex = questionIndex + 1;
+  const handleNext = useCallback(() => {
+    const currentQuestion = allQuestions[questionIndex];
+    const isOpenEnd = currentQuestion?.questionType === 'open-end';
 
-          if (nextIndex >= totalQuestions) {
-            const result = calculateResult(newAnswers);
-            setResultType(result);
-            setScreen('giveaway-form');
-            setSelectedAnswer(null);
-            return newAnswers;
-          }
+    if (!isOpenEnd && !selectedAnswer) return;
+    if (isOpenEnd && !(openEndAnswers[questionIndex] ?? '').trim()) return;
 
-          const currentChapter = chapters[chapterIndex];
-          const currentChapterQCount = currentChapter.questions.length;
-          const questionsAnsweredInChapter = newAnswers.filter((_, i) => {
-            const q = allQuestions[i];
-            return currentChapter.questions.some((cq) => cq.id === q.id);
-          }).length;
+    const newAnswers = isOpenEnd ? [...answers] : [...answers, selectedAnswer!];
+    setAnswers(newAnswers);
+    setSelectedAnswer(null);
 
-          if (questionsAnsweredInChapter >= currentChapterQCount && chapterIndex < chapters.length - 1) {
-            setChapterIndex(chapterIndex + 1);
-            setQuestionIndex(nextIndex);
-            setScreen('chapter-intro');
-          } else {
-            setQuestionIndex(nextIndex);
-          }
+    const nextIndex = questionIndex + 1;
 
-          setSelectedAnswer(null);
-          return newAnswers;
-        });
-      }, 500);
-    },
-    [questionIndex, totalQuestions, chapters, chapterIndex, allQuestions]
-  );
+    if (nextIndex >= totalQuestions) {
+      const result = calculateResult(newAnswers);
+      setResultType(result);
+      setScreen('giveaway-form');
+      return;
+    }
 
-const handleNext = useCallback(() => {
-  const currentQuestion = allQuestions[questionIndex];
-  const isOpenEnd = currentQuestion?.questionType === 'open-end';
+    const currentChapter = chapters[chapterIndex];
+    const currentChapterQCount = currentChapter.questions.length;
+    const questionsAnsweredInChapter = newAnswers.filter((_, i) => {
+      const q = allQuestions[i];
+      return currentChapter.questions.some((cq) => cq.id === q.id);
+    }).length;
 
-  if (!isOpenEnd && !selectedAnswer) return;
-  if (isOpenEnd && !(openEndAnswers[questionIndex] ?? '').trim()) return;
-
-  const newAnswers = isOpenEnd ? [...answers] : [...answers, selectedAnswer!];
-
-  setAnswers(newAnswers);
-  setSelectedAnswer(null);
-
-  const nextIndex = questionIndex + 1;
-
-  if (nextIndex >= totalQuestions) {
-    const result = calculateResult(newAnswers);
-    setResultType(result);
-    setScreen('giveaway-form');
-    return;
-  }
-
-  const currentChapter = chapters[chapterIndex];
-  const currentChapterQCount = currentChapter.questions.length;
-
-  const answeredQuestionIdsInCurrentChapter = allQuestions
-    .slice(0, nextIndex)
-    .filter((q) => currentChapter.questions.some((cq) => cq.id === q.id)).length;
-
-  if (answeredQuestionIdsInCurrentChapter >= currentChapterQCount && chapterIndex < chapters.length - 1) {
-    setChapterIndex(chapterIndex + 1);
-    setQuestionIndex(nextIndex);
-    setScreen('chapter-intro');
-  } else {
-    setQuestionIndex(nextIndex);
-  }
-}, [selectedAnswer, openEndAnswers, answers, questionIndex, chapterIndex, allQuestions, totalQuestions, chapters]);
+    if (questionsAnsweredInChapter >= currentChapterQCount && chapterIndex < chapters.length - 1) {
+      setChapterIndex(chapterIndex + 1);
+      setQuestionIndex(nextIndex);
+      setScreen('chapter-intro');
+    } else {
+      setQuestionIndex(nextIndex);
+    }
+  }, [selectedAnswer, openEndAnswers, answers, questionIndex, chapterIndex, allQuestions, totalQuestions, chapters]);
 
   const handleRestart = useCallback(() => {
     setScreen('landing');
@@ -1300,20 +1229,27 @@ const handleNext = useCallback(() => {
     setOpenEndAnswers({});
     setChapterIndex(0);
     setResultType(null);
-    setShowSubmissionSuccess(false);
   }, []);
 
   const handleGiveawayComplete = useCallback(() => {
-    setShowSubmissionSuccess(true);
     setScreen('result');
   }, []);
 
   return (
     <div className="min-h-screen bg-[#0D1B2E]">
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+          className="px-3 py-1 text-xs border border-[#D4A843]/50 text-[#D4A843] bg-[#0D1B2E]/60 backdrop-blur rounded-sm font-['DM_Sans']"
+        >
+          {lang === 'zh' ? 'EN' : '中文'}
+        </button
+      </div>
+
       <AnimatePresence mode="wait">
         {screen === 'landing' && (
           <motion.div key="landing" className="min-h-screen">
-            <LandingScreen onStart={handleStart} heroBg={heroBg} configRows={configRows ?? []} />
+            <LandingScreen onStart={handleStart} heroBg={heroBg} configRows={configRows ?? []} lang={lang} />
           </motion.div>
         )}
 
@@ -1324,7 +1260,7 @@ const handleNext = useCallback(() => {
               chapters={chapters}
               onContinue={handleChapterContinue}
               overlayColor={colors.overlayColor}
-              configRows={configRows ?? []}
+              lang={lang}
             />
           </motion.div>
         )}
@@ -1344,6 +1280,7 @@ const handleNext = useCallback(() => {
               overlayColor={colors.overlayColor}
               questionCardBg={colors.questionCardBg}
               configRows={configRows ?? []}
+              lang={lang}
             />
           </motion.div>
         )}
@@ -1355,18 +1292,14 @@ const handleNext = useCallback(() => {
               onComplete={handleGiveawayComplete}
               configRows={configRows ?? []}
               openEndAnswers={openEndAnswers}
+              lang={lang}
             />
           </motion.div>
         )}
 
         {screen === 'result' && resultType && (
           <motion.div key="result" className="min-h-screen">
-            <ResultScreen
-              resultType={resultType}
-              onRestart={handleRestart}
-              configRows={configRows ?? []}
-              showSubmissionSuccess={showSubmissionSuccess}
-            />
+            <ResultScreen resultType={resultType} onRestart={handleRestart} configRows={configRows ?? []} lang={lang} />
           </motion.div>
         )}
       </AnimatePresence>
