@@ -34,6 +34,7 @@ export const results: Record<
     urbanwoodMatch: string;
     boardingPassDestination: string;
     resultImage?: string;
+    resultImageEn?: string;
   }
 > = {
   A: {
@@ -50,6 +51,7 @@ export const results: Record<
       '城木酒店以木系簡約設計與溫潤氛圍，回應你對慢活的嚮往。在這裡，你可以放下節奏，讓自己完全放鬆，享受屬於自己的寧靜時光。',
     boardingPassDestination: 'SLOW STAY',
     resultImage: '',
+    resultImageEn: '',
   },
   B: {
     id: 'B',
@@ -65,6 +67,7 @@ export const results: Record<
       '城木酒店連結著地道生活圈，讓你隨時走進街區尋找美食，再帶著滿足回到舒適空間。',
     boardingPassDestination: 'LOCAL BITES',
     resultImage: '',
+    resultImageEn: '',
   },
   C: {
     id: 'C',
@@ -80,6 +83,7 @@ export const results: Record<
       '城木酒店的設計細節與空間層次，讓你隨時都能捕捉到富有質感的畫面。',
     boardingPassDestination: 'FRAME & LIGHT',
     resultImage: '',
+    resultImageEn: '',
   },
   D: {
     id: 'D',
@@ -95,6 +99,7 @@ export const results: Record<
       '城木酒店位於城市與社區交界，讓你輕鬆深入不同生活層次，開展屬於你的探索路線。',
     boardingPassDestination: 'CITY DEPTH',
     resultImage: '',
+    resultImageEn: '',
   },
   E: {
     id: 'E',
@@ -110,6 +115,7 @@ export const results: Record<
       '城木酒店在夜晚成為延續感受的空間，讓你在靜謐中慢慢消化屬於城市的情緒。',
     boardingPassDestination: 'NIGHT VIBE',
     resultImage: '',
+    resultImageEn: '',
   },
   F: {
     id: 'F',
@@ -125,6 +131,7 @@ export const results: Record<
       '城木酒店連結社區與旅人，讓你更容易與城市產生互動，成為其中的一部分。',
     boardingPassDestination: 'HUMAN LINKS',
     resultImage: '',
+    resultImageEn: '',
   },
 };
 
