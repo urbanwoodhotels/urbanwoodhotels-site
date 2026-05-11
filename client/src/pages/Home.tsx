@@ -133,7 +133,48 @@ function DecoCorners() {
 }
 
 // ─── Progress Bar ─────────────────────────────────────────────────────────────
-function ProgressBar({ current, total }: { current: number; total: number }) {
+function ProgressBar({
+  current,
+  total,
+  lang,
+}: {
+  current: number;
+  total: number;
+  lang: 'zh' | 'en';
+}) {
+  const remaining = total - current;
+
+  return (
+    <div className="w-full mb-4">
+      <div className="flex justify-between text-[11px] text-white/70 mb-1 font-['DM_Sans']">
+        <span>
+          {lang === 'en'
+            ? `Question ${current} / ${total}`
+            : `第 ${current} 題 / 共 ${total} 題`}
+        </span>
+
+        <span>
+          {remaining > 0
+            ? lang === 'en'
+              ? `${remaining} left`
+              : `尚餘 ${remaining} 題`
+            : lang === 'en'
+            ? 'Final question'
+            : '最後一題'}
+        </span>
+      </div>
+
+      <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-[#D4A843] transition-all duration-500"
+          style={{
+            width: `${(current / total) * 100}%`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
   const pct = Math.round((current / total) * 100);
   return (
     <div className="w-full">
@@ -410,7 +451,11 @@ function QuestionScreen({
       <DecoCorners />
 
       <div className="relative z-10 px-6 pt-8 pb-4">
-        <ProgressBar current={questionIndex + 1} total={totalQuestions} />
+       <ProgressBar
+  current={questionIndex + 1}
+  total={totalQuestions}
+  lang={lang}
+/>
         <div className="mt-3 flex items-center gap-2">
           <span
             className="text-[10px] px-2 py-0.5 rounded-sm tracking-widest uppercase"
