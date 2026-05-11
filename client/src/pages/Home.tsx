@@ -276,19 +276,14 @@ function ChapterIntroScreen({
   onContinue,
   chapters,
   overlayColor,
-  lang,
 }: {
   chapterIndex: number;
   onContinue: () => void;
   chapters: Chapter[];
   overlayColor?: string;
-  lang: Lang;
 }) {
   const overlay = overlayColor ?? 'rgba(13,27,46,0.65)';
   const chapter = chapters[chapterIndex];
-  const chapterSubtitle = lang === 'en' ? chapterCopyEn[chapter.id]?.subtitle ?? chapter.subtitle : chapter.subtitle;
-  const chapterScene = lang === 'en' ? chapterCopyEn[chapter.id]?.scene ?? chapter.scene : chapter.scene;
-  const chapterButton = lang === 'en' ? chapterCopyEn[chapter.id]?.button ?? 'Enter Scene →' : '進入場景 →';
 
   return (
     <motion.div
@@ -325,11 +320,11 @@ function ChapterIntroScreen({
         </div>
 
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-          {chapterSubtitle}
+          {chapter.subtitle}
         </h2>
 
         <p className="text-[#D4A843]/80 text-sm tracking-widest mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          ✦ {chapterScene} ✦
+          ✦ {chapter.scene} ✦
         </p>
 
         <button
@@ -559,15 +554,15 @@ function GiveawayFormScreen({
     'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
   const successMsg =
     cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
-  const btnSubmitForm = lang === 'en' ? uiCopyEn.submitForm : cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
-  const almostThereLabel = lang === 'en' ? uiCopyEn.almostThere : cfg['form_almost_there_label'] ?? 'Almost There';
-  const travelerTypeLabel = lang === 'en' ? uiCopyEn.travellerType : cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
-  const successTitleLabel = lang === 'en' ? uiCopyEn.submissionSuccessTitle : cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
+  const btnSubmitForm = cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
+  const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
+  const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
+  const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
   const platformFieldLabel =
-    lang === 'en' ? uiCopyEn.platformField : cfg['form_platform_field_label'] ?? '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
-  const socialHandleFieldLabel = lang === 'en' ? uiCopyEn.socialHandleField : cfg['form_social_handle_field_label'] ?? '2. 社交平台用戶名稱 Social Media Username';
-  const nameFieldLabel = lang === 'en' ? uiCopyEn.nameField : cfg['form_name_field_label'] ?? '3. 姓名 Name';
-  const emailFieldLabel = lang === 'en' ? uiCopyEn.emailField : cfg['form_email_field_label'] ?? '4. 電郵地址 Email Address';
+    cfg['form_platform_field_label'] ?? '1. 從哪個途徑報名參加活動  Which platform did you use to register for the event';
+  const socialHandleFieldLabel = cfg['form_social_handle_field_label'] ?? '2. 社交平台用戶名稱 Social Media Username';
+  const nameFieldLabel = cfg['form_name_field_label'] ?? '3. 姓名 Name';
+  const emailFieldLabel = cfg['form_email_field_label'] ?? '4. 電郵地址 Email Address';
 
   const [platform, setPlatform] = useState<'instagram' | 'facebook' | ''>('');
   const [socialHandle, setSocialHandle] = useState('');
@@ -838,12 +833,10 @@ function ResultScreen({
   resultType,
   onRestart,
   configRows,
-  lang,
 }: {
   resultType: AnswerType;
   onRestart: () => void;
   configRows?: { configKey: string; configValue: string }[];
-  lang: Lang;
 }) {
   const baseResult = results[resultType];
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
@@ -860,12 +853,12 @@ function ResultScreen({
       : cfg[`result_${resultType}_resultImage`] ?? baseResult.resultImage ?? '',
   };
   const boardingPassImage = cfg[`result_${resultType}_boardingPassImage`] ?? '';
-  const btnShare = lang === 'en' ? uiCopyEn.share : cfg['btn_share'] ?? '📤 分享我的登機證';
-  const btnSaveBoardingPass = lang === 'en' ? uiCopyEn.saveImage : cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
-  const btnBookHotel = lang === 'en' ? uiCopyEn.bookHotel : cfg['btn_book_hotel'] ?? '🏨 立即預訂城木紅磡';
+  const btnShare = cfg['btn_share'] ?? '📤 分享我的登機證';
+  const btnSaveBoardingPass = cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
+  const btnBookHotel = cfg['btn_book_hotel'] ?? '🏨 立即預訂城木紅磡';
   const btnBookHotelUrl = cfg['btn_book_hotel_url'] ?? 'https://urbanwoodhotels.com/hk/global_hotels/hung-hom-hk/';
-  const btnRestart = lang === 'en' ? uiCopyEn.restart : cfg['btn_restart'] ?? '重新測驗';
-  const resultShareHint = lang === 'en' ? uiCopyEn.shareHint : cfg['result_share_hint'] ?? '分享至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！';
+  const btnRestart = cfg['btn_restart'] ?? '重新測驗';
+  const resultShareHint = cfg['result_share_hint'] ?? '分享至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！';
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -1158,7 +1151,6 @@ export default function Home() {
   const [openEndAnswers, setOpenEndAnswers] = useState<Record<number, string>>({});
   const [chapterIndex, setChapterIndex] = useState(0);
   const [resultType, setResultType] = useState<AnswerType | null>(null);
-  const [lang, setLang] = useState<Lang>('zh');
 
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
   const chapters = useMemo(() => applyConfig(configRows ?? []), [configRows]);
@@ -1192,7 +1184,8 @@ export default function Home() {
     if (!isOpenEnd && !selectedAnswer) return;
     if (isOpenEnd && !(openEndAnswers[questionIndex] ?? '').trim()) return;
 
-    const newAnswers = isOpenEnd ? [...answers] : [...answers, selectedAnswer!];
+    const answerForScoring: AnswerType = isOpenEnd ? 'A' : selectedAnswer!;
+    const newAnswers = [...answers, answerForScoring];
     setAnswers(newAnswers);
     setSelectedAnswer(null);
 
@@ -1243,7 +1236,7 @@ export default function Home() {
           className="px-3 py-1 text-xs border border-[#D4A843]/50 text-[#D4A843] bg-[#0D1B2E]/60 backdrop-blur rounded-sm font-['DM_Sans']"
         >
           {lang === 'zh' ? 'EN' : '中文'}
-        </button>
+        </button
       </div>
 
       <AnimatePresence mode="wait">
@@ -1260,7 +1253,6 @@ export default function Home() {
               chapters={chapters}
               onContinue={handleChapterContinue}
               overlayColor={colors.overlayColor}
-              lang={lang}
             />
           </motion.div>
         )}
@@ -1299,7 +1291,7 @@ export default function Home() {
 
         {screen === 'result' && resultType && (
           <motion.div key="result" className="min-h-screen">
-            <ResultScreen resultType={resultType} onRestart={handleRestart} configRows={configRows ?? []} lang={lang} />
+            <ResultScreen resultType={resultType} onRestart={handleRestart} configRows={configRows ?? []} />
           </motion.div>
         )}
       </AnimatePresence>
