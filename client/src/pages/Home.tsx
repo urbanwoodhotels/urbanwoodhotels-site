@@ -175,28 +175,6 @@ function ProgressBar({
     </div>
   );
 }
-  const pct = Math.round((current / total) * 100);
-  return (
-    <div className="w-full">
-      <div className="flex justify-between items-center mb-1.5">
-        <span className="text-[#D4A843]/70 text-xs tracking-[0.15em] font-['DM_Sans']">
-          QUESTION {current} / {total}
-        </span>
-        <span className="text-[#D4A843]/70 text-xs tracking-[0.15em] font-['DM_Sans']">{pct}%</span>
-      </div>
-      <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: 'linear-gradient(90deg, #D4A843, #E8654A)' }}
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-        />
-      </div>
-    </div>
-  );
-}
-
 // ─── Landing Screen ───────────────────────────────────────────────────────────
 function LandingScreen({
   onStart,
@@ -451,7 +429,7 @@ function QuestionScreen({
       <DecoCorners />
 
       <div className="relative z-10 px-6 pt-8 pb-4">
-       <ProgressBar
+      <ProgressBar
   current={questionIndex + 1}
   total={totalQuestions}
   lang={lang}
