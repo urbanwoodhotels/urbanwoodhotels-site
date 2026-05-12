@@ -118,7 +118,7 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
 type Screen = 'language' | 'landing' | 'chapter-intro' | 'question' | 'giveaway-form' | 'result';
 
 const HERO_BG =
-  'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634;
+  'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634';
 
 // ─── Geometric Art Deco Corner Decoration ────────────────────────────────────
 function DecoCorners() {
@@ -1022,12 +1022,12 @@ function ResultScreen({
   };
 
   const resultBgMap: Record<AnswerType, string> = {
-    A: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
-    B: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
-    C: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
-    D: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
-    E: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
-    F: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
+    A: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
+    B: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
+    C: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
+    D: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
+    E: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
+    F: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
   };
 
   return (
