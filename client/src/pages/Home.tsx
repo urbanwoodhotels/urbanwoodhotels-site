@@ -982,7 +982,16 @@ const result = {
       baseResult.resultImage ||
       '',
 };
-  const boardingPassImage = cfg[`result_${resultType}_boardingPassImage`] ?? '';
+ const boardingPassImage =
+  lang === 'en'
+    ? cfg[`result_${resultType}_boardingPassImageEn`] ||
+      baseResult.boardingPassImageEn ||
+      cfg[`result_${resultType}_boardingPassImage`] ||
+      baseResult.boardingPassImage ||
+      ''
+    : cfg[`result_${resultType}_boardingPassImage`] ||
+      baseResult.boardingPassImage ||
+      '';
   const btnShare = cfg['btn_share'] ?? '📤 分享我的登機證';
   const btnSaveBoardingPass = cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
   const btnBookHotel = cfg['btn_book_hotel'] ?? '🏨 立即預訂城木紅磡';
