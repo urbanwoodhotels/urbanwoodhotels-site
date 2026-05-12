@@ -115,7 +115,7 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
   });
 }
 
-type Screen = 'landing' | 'chapter-intro' | 'question' | 'giveaway-form' | 'result';
+type Screen = 'language' | 'landing' | 'chapter-intro' | 'question' | 'giveaway-form' | 'result';
 
 const HERO_BG =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/hero-bg-XS9H5NH3aLyjCXKGtNcwKc.webp';
@@ -176,6 +176,66 @@ function ProgressBar({
   );
 }
 // ─── Landing Screen ───────────────────────────────────────────────────────────
+function LanguageScreen({ onSelect }: { onSelect: (lang: Lang) => void }) {
+  return (
+    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#F8F4EC] px-6">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F8F4EC] to-[#EFE7D8]" />
+
+      <motion.div
+        className="relative z-10 text-center max-w-sm"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <p className="text-[#B99855] text-xs tracking-[0.3em] uppercase mb-4 font-['DM_Sans']">
+          Urbanwood Hotel · Hung Hom
+        </p>
+
+        <h1
+          className="text-3xl font-bold text-[#213047] mb-3 leading-tight"
+          style={{ fontFamily: "'Noto Serif TC', serif" }}
+        >
+          城木漫遊之旅
+        </h1>
+
+        <p
+          className="text-[#213047]/60 text-sm mb-8 leading-relaxed"
+          style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+        >
+          請先選擇語言<br />
+          Please select your language
+        </p>
+
+        <div className="space-y-3">
+          <button
+            onClick={() => onSelect('zh')}
+            className="w-full py-3.5 rounded-sm text-sm tracking-[0.2em] font-semibold"
+            style={{
+              background: '#D4A843',
+              color: '#213047',
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            中文
+          </button>
+
+          <button
+            onClick={() => onSelect('en')}
+            className="w-full py-3.5 rounded-sm text-sm tracking-[0.2em] font-semibold border"
+            style={{
+              borderColor: '#D4A843',
+              color: '#B99855',
+              background: 'rgba(255,255,255,0.45)',
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            English
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 function LandingScreen({
   onStart,
   heroBg,
@@ -1169,15 +1229,16 @@ function ResultScreen({
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [screen, setScreen] = useState<Screen>('landing');
+  const [screen, setScreen] = useState<Screen>('language');
+  const [lang, setLang] = useState<Lang>('zh');
+
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerType[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<AnswerType | null>(null);
   const [openEndAnswers, setOpenEndAnswers] = useState<Record<number, string>>({});
   const [chapterIndex, setChapterIndex] = useState(0);
   const [resultType, setResultType] = useState<AnswerType | null>(null);
-  const [lang, setLang] = useState<Lang>('zh');
-  
+
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
   const chapters = useMemo(() => applyConfig(configRows ?? []), [configRows]);
   const allQuestions = useMemo(() => chapters.flatMap((c) => c.questions), [chapters]);
@@ -1189,6 +1250,11 @@ export default function Home() {
   }, [configRows]);
 
   const colors = useMemo(() => extractColors(configRows ?? []), [configRows]);
+
+  const handleLanguageSelect = useCallback((selectedLang: Lang) => {
+    setLang(selectedLang);
+    setScreen('landing');
+  }, []);
 
   const handleStart = useCallback(() => {
     setScreen('chapter-intro');
@@ -1203,15 +1269,18 @@ export default function Home() {
     setSelectedAnswer(answer);
   }, []);
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback((directAnswer?: AnswerType) => {
     const currentQuestion = allQuestions[questionIndex];
     const isOpenEnd = currentQuestion?.questionType === 'open-end';
 
-    if (!isOpenEnd && !selectedAnswer) return;
+    const finalAnswer = directAnswer ?? selectedAnswer;
+
+    if (!isOpenEnd && !finalAnswer) return;
     if (isOpenEnd && !(openEndAnswers[questionIndex] ?? '').trim()) return;
 
-    const answerForScoring: AnswerType = isOpenEnd ? 'A' : selectedAnswer!;
+    const answerForScoring: AnswerType = isOpenEnd ? 'A' : finalAnswer!;
     const newAnswers = [...answers, answerForScoring];
+
     setAnswers(newAnswers);
     setSelectedAnswer(null);
 
@@ -1240,8 +1309,30 @@ export default function Home() {
     }
   }, [selectedAnswer, openEndAnswers, answers, questionIndex, chapterIndex, allQuestions, totalQuestions, chapters]);
 
+  const handleBack = useCallback(() => {
+    if (questionIndex <= 0) return;
+
+    const previousIndex = questionIndex - 1;
+    const previousAnswers = answers.slice(0, -1);
+
+    setAnswers(previousAnswers);
+    setQuestionIndex(previousIndex);
+    setSelectedAnswer(null);
+
+    const previousQuestion = allQuestions[previousIndex];
+    const previousChapterIndex = chapters.findIndex((chapter) =>
+      chapter.questions.some((q) => q.id === previousQuestion.id)
+    );
+
+    if (previousChapterIndex >= 0) {
+      setChapterIndex(previousChapterIndex);
+    }
+
+    setScreen('question');
+  }, [questionIndex, answers, allQuestions, chapters]);
+
   const handleRestart = useCallback(() => {
-    setScreen('landing');
+    setScreen('language');
     setQuestionIndex(0);
     setAnswers([]);
     setSelectedAnswer(null);
@@ -1255,20 +1346,22 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0D1B2E]">
-      <div className="fixed top-4 right-4 z-50">
-        <button
-          onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-          className="px-3 py-1 text-xs border border-[#D4A843]/50 text-[#D4A843] bg-[#0D1B2E]/60 backdrop-blur rounded-sm font-['DM_Sans']"
-        >
-          {lang === 'zh' ? 'EN' : '中文'}
-        </button>
-      </div>
-
+    <div className="min-h-screen bg-[#F8F4EC]">
       <AnimatePresence mode="wait">
+        {screen === 'language' && (
+          <motion.div key="language" className="min-h-screen">
+            <LanguageScreen onSelect={handleLanguageSelect} />
+          </motion.div>
+        )}
+
         {screen === 'landing' && (
           <motion.div key="landing" className="min-h-screen">
-            <LandingScreen onStart={handleStart} heroBg={heroBg} configRows={configRows ?? []} lang={lang} />
+            <LandingScreen
+              onStart={handleStart}
+              heroBg={heroBg}
+              configRows={configRows ?? []}
+              lang={lang}
+            />
           </motion.div>
         )}
 
@@ -1278,7 +1371,7 @@ export default function Home() {
               chapterIndex={chapterIndex}
               chapters={chapters}
               onContinue={handleChapterContinue}
-              overlayColor={colors.overlayColor}
+              overlayColor="rgba(255,253,248,0.72)"
             />
           </motion.div>
         )}
@@ -1290,13 +1383,16 @@ export default function Home() {
               selectedAnswer={selectedAnswer}
               openEndAnswer={openEndAnswers[questionIndex]}
               onAnswer={handleAnswer}
-              onOpenEndAnswer={(text) => setOpenEndAnswers((prev) => ({ ...prev, [questionIndex]: text }))}
+              onOpenEndAnswer={(text) =>
+                setOpenEndAnswers((prev) => ({ ...prev, [questionIndex]: text }))
+              }
               onNext={handleNext}
+              onBack={handleBack}
               chapters={chapters}
               allQuestions={allQuestions}
               totalQuestions={totalQuestions}
-              overlayColor={colors.overlayColor}
-              questionCardBg={colors.questionCardBg}
+              overlayColor="rgba(255,253,248,0.72)"
+              questionCardBg="rgba(255,255,255,0.72)"
               configRows={configRows ?? []}
               lang={lang}
             />
@@ -1315,16 +1411,16 @@ export default function Home() {
           </motion.div>
         )}
 
-       {screen === 'result' && resultType && (
-  <motion.div key="result" className="min-h-screen">
-    <ResultScreen
-      resultType={resultType}
-      onRestart={handleRestart}
-      configRows={configRows ?? []}
-      lang={lang}
-    />
-  </motion.div>
-)}
+        {screen === 'result' && resultType && (
+          <motion.div key="result" className="min-h-screen">
+            <ResultScreen
+              resultType={resultType}
+              onRestart={handleRestart}
+              configRows={configRows ?? []}
+              lang={lang}
+            />
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
