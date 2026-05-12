@@ -397,3 +397,5 @@ export function calculateResult(answers: AnswerType[]): AnswerType {
   return recentTied[0];
 }
  
+// trigger deploy
+update quizdata
