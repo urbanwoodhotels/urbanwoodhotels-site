@@ -1022,12 +1022,12 @@ function ResultScreen({
   };
 
   const resultBgMap: Record<AnswerType, string> = {
-    A: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter3-waterfront-iPfdaUQUxczMzsT66zKagV.webp',
-    B: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
-    C: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
-    D: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter2-street-6xHx8sb6kevxdCPb3sZazz.webp',
-    E: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/chapter4-night-JNRpkyYue4XpnfcaXbRsqz.webp',
-    F: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663409108373/2KCqDLHQeHBQMW8Q6pJeXC/hero-bg-XS9H5NH3aLyjCXKGtNcwKc.webp',
+    A: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
+    B: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
+    C: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
+    D: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
+    E: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
+    F: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634,
   };
 
   return (
