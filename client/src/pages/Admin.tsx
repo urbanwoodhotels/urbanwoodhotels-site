@@ -1122,52 +1122,31 @@ function ResultsTab() {
                 </div>
               ) : (
                <div className="space-y-2">
-  <ImageUploader
-    currentUrl={values[id][field.suffix]}
-    onUploaded={(url) => {
-      setValues((prev) => ({
-        ...prev,
-        [id]: {
-          ...prev[id],
-          [field.suffix]: url,
-        },
-      }));
+ <ImageUploader
+  currentUrl={values[id][field.suffix]}
+  onUploaded={(url) => {
+    setValues((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [field.suffix]: url,
+      },
+    }));
 
-      setConfigMutation.mutate({
-        key: `result_${id}_${field.suffix}`,
-        value: url,
-      });
-    }}
-  />
+    setConfigMutation.mutate({
+      key: `result_${id}_${field.suffix}`,
+      value: url,
+    });
+  }}
+/>
 
-  <button
-    type="button"
-    onClick={() => {
-      setValues((prev) => ({
-        ...prev,
-        [id]: {
-          ...prev[id],
-          [field.suffix]: '',
-        },
-      }));
+        </div>
+      ))}
+    </div>
+  );
+}
 
-      setConfigMutation.mutate({
-        key: `result_${id}_${field.suffix}`,
-        value: '',
-      });
-
-      toast.success('已重置為 quizData.ts 預設圖片');
-    }}
-    className="px-4 py-2 text-white/50 text-xs tracking-wider uppercase border border-white/10 hover:border-white/20 hover:text-white/70 transition-colors"
-    style={{
-      fontFamily: "'DM Sans', sans-serif",
-    }}
-  >
-    Reset / 清空圖片
-  </button>
-</div>
-
-// ─── Questions Tab ────────────────────────────────────────────────────────────
+// ─── Questions Tab ────────────────────────────────────────────
 function QuestionsTab() {
   const utils = trpc.useUtils();
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
