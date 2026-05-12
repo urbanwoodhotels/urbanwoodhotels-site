@@ -118,7 +118,7 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
 type Screen = 'language' | 'landing' | 'chapter-intro' | 'question' | 'giveaway-form' | 'result';
 
 const HERO_BG =
-  'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634';
+  'https://res.cloudinary.com/defqvpbk4/image/upload/v1778557637/urbanwood-quiz/oz4xhbxdqqt1vpdnzdpa.jpg?v=1778557638383';
 
 // ─── Geometric Art Deco Corner Decoration ────────────────────────────────────
 function DecoCorners() {
