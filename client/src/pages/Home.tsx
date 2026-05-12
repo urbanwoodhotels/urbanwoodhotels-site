@@ -956,20 +956,32 @@ function ResultScreen({
   configRows?: { configKey: string; configValue: string }[];
   lang: Lang;
 }) {
-  const baseResult = results[resultType];
-  const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
-  const resultEnCopy = resultCopyEn[resultType];
-  const result = {
-    ...baseResult,
-    name: lang === 'en' ? baseResult.nameEn : cfg[`result_${resultType}_name`] ?? baseResult.name,
-    nameEn: cfg[`result_${resultType}_nameEn`] ?? baseResult.nameEn,
-    tagline: lang === 'en' ? resultEnCopy.tagline : cfg[`result_${resultType}_tagline`] ?? baseResult.tagline,
-    sensoryProfile: lang === 'en' ? resultEnCopy.sensoryProfile : cfg[`result_${resultType}_sensoryProfile`] ?? baseResult.sensoryProfile,
-    urbanwoodMatch: lang === 'en' ? resultEnCopy.urbanwoodMatch : cfg[`result_${resultType}_urbanwoodMatch`] ?? baseResult.urbanwoodMatch,
-    resultImage: lang === 'en'
-      ? cfg[`result_${resultType}_resultImageEn`] ?? baseResult.resultImageEn ?? cfg[`result_${resultType}_resultImage`] ?? baseResult.resultImage ?? ''
-      : cfg[`result_${resultType}_resultImage`] ?? baseResult.resultImage ?? '',
-  };
+const baseResult = results[resultType];
+const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
+const resultEnCopy = resultCopyEn[resultType];
+
+const result = {
+  ...baseResult,
+  name: lang === 'en' ? baseResult.nameEn : cfg[`result_${resultType}_name`] || baseResult.name,
+  nameEn: cfg[`result_${resultType}_nameEn`] || baseResult.nameEn,
+  tagline: lang === 'en' ? resultEnCopy.tagline : cfg[`result_${resultType}_tagline`] || baseResult.tagline,
+  sensoryProfile: lang === 'en'
+    ? resultEnCopy.sensoryProfile
+    : cfg[`result_${resultType}_sensoryProfile`] || baseResult.sensoryProfile,
+  urbanwoodMatch: lang === 'en'
+    ? resultEnCopy.urbanwoodMatch
+    : cfg[`result_${resultType}_urbanwoodMatch`] || baseResult.urbanwoodMatch,
+
+  resultImage: lang === 'en'
+    ? cfg[`result_${resultType}_resultImageEn`] ||
+      baseResult.resultImageEn ||
+      cfg[`result_${resultType}_resultImage`] ||
+      baseResult.resultImage ||
+      ''
+    : cfg[`result_${resultType}_resultImage`] ||
+      baseResult.resultImage ||
+      '',
+};
   const boardingPassImage = cfg[`result_${resultType}_boardingPassImage`] ?? '';
   const btnShare = cfg['btn_share'] ?? '📤 分享我的登機證';
   const btnSaveBoardingPass = cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
