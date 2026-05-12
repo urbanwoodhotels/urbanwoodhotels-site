@@ -396,3 +396,4 @@ export function calculateResult(answers: AnswerType[]): AnswerType {
 
   return recentTied[0];
 }
+ 
