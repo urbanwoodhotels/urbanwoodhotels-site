@@ -175,31 +175,39 @@ function ProgressBar({
     </div>
   );
 }
-// ─── Landing Screen ───────────────────────────────────────────────────────────
-function LanguageScreen({ onSelect }: { onSelect: (lang: Lang) => void }) {
+// ─── Language Screen ─────────────────────────────────────────────────────────
+function LanguageScreen({
+  onSelect,
+  heroBg,
+}: {
+  onSelect: (lang: Lang) => void;
+  heroBg: string;
+}) {
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#F8F4EC] px-6">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF8] via-[#F8F4EC] to-[#EFE7D8]" />
+    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0D1B2E]/45 via-[#0D1B2E]/35 to-[#0D1B2E]/65" />
+      <DecoCorners />
 
       <motion.div
-        className="relative z-10 text-center max-w-sm"
+        className="relative z-10 text-center max-w-sm w-full"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <p className="text-[#B99855] text-xs tracking-[0.3em] uppercase mb-4 font-['DM_Sans']">
+        <p className="text-[#D4A843] text-xs tracking-[0.3em] uppercase mb-4 font-['DM_Sans']">
           Urbanwood Hotel · Hung Hom
         </p>
 
         <h1
-          className="text-3xl font-bold text-[#213047] mb-3 leading-tight"
+          className="text-4xl font-bold text-white mb-3 leading-tight"
           style={{ fontFamily: "'Noto Serif TC', serif" }}
         >
           城木漫遊之旅
         </h1>
 
         <p
-          className="text-[#213047]/60 text-sm mb-8 leading-relaxed"
+          className="text-white/70 text-sm mb-8 leading-relaxed"
           style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
         >
           請先選擇語言<br />
@@ -211,8 +219,8 @@ function LanguageScreen({ onSelect }: { onSelect: (lang: Lang) => void }) {
             onClick={() => onSelect('zh')}
             className="w-full py-3.5 rounded-sm text-sm tracking-[0.2em] font-semibold"
             style={{
-              background: '#D4A843',
-              color: '#213047',
+              background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
+              color: '#0D1B2E',
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
@@ -223,9 +231,9 @@ function LanguageScreen({ onSelect }: { onSelect: (lang: Lang) => void }) {
             onClick={() => onSelect('en')}
             className="w-full py-3.5 rounded-sm text-sm tracking-[0.2em] font-semibold border"
             style={{
-              borderColor: '#D4A843',
-              color: '#B99855',
-              background: 'rgba(255,255,255,0.45)',
+              borderColor: 'rgba(212,168,67,0.7)',
+              color: '#D4A843',
+              background: 'rgba(13,27,46,0.55)',
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
@@ -236,6 +244,8 @@ function LanguageScreen({ onSelect }: { onSelect: (lang: Lang) => void }) {
     </div>
   );
 }
+
+// ─── Landing Screen ───────────────────────────────────────────────────────────
 function LandingScreen({
   onStart,
   heroBg,
@@ -426,7 +436,7 @@ function QuestionScreen({
   onAnswer,
   onOpenEndAnswer,
   onNext,
-  onBack, 
+  onBack,
   chapters,
   allQuestions,
   totalQuestions,
@@ -450,8 +460,8 @@ function QuestionScreen({
   configRows?: { configKey: string; configValue: string }[];
   lang: Lang;
 }) {
-  const overlay = overlayColor ?? 'rgba(13,27,46,0.75)';
-  const cardBg = questionCardBg ?? 'rgba(13,27,46,0.75)';
+  const overlay = overlayColor ?? 'rgba(13,27,46,0.48)';
+  const cardBg = questionCardBg ?? 'rgba(13,27,46,0.72)';
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
   const btnNext = cfg['btn_next'] ?? '下一題 →';
   const btnLastQuestion = cfg['btn_last_question'] ?? '查看結果 ✶';
@@ -487,24 +497,32 @@ function QuestionScreen({
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${currentChapter.bgImage})` }}
       />
-      <div className="absolute inset-0" style={{ background: overlay }} />
+      <div
+        className="absolute inset-0 backdrop-blur-[1px]"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(13,27,46,0.38), rgba(13,27,46,0.45), rgba(13,27,46,0.58))',
+        }}
+      />
       <DecoCorners />
 
       <div className="relative z-10 px-6 pt-8 pb-4">
-      <ProgressBar
-  current={questionIndex + 1}
-  total={totalQuestions}
-  lang={lang}
-/>
+        <ProgressBar
+          current={questionIndex + 1}
+          total={totalQuestions}
+          lang={lang}
+        />
+
         {questionIndex > 0 && (
-  <button
-    onClick={onBack}
-    className="mt-3 text-[#213047]/60 text-xs tracking-[0.15em] uppercase hover:text-[#B99855] transition-colors"
-    style={{ fontFamily: "'DM Sans', sans-serif" }}
-  >
-    ← {lang === 'en' ? 'Back' : '上一題'}
-  </button>
-)}
+          <button
+            onClick={onBack}
+            className="mt-3 text-white/70 text-xs tracking-[0.15em] uppercase hover:text-[#D4A843] transition-colors"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
+          >
+            ← {lang === 'en' ? 'Back' : '上一題'}
+          </button>
+        )}
+
         <div className="mt-3 flex items-center gap-2">
           <span
             className="text-[10px] px-2 py-0.5 rounded-sm tracking-widest uppercase"
@@ -555,12 +573,12 @@ function QuestionScreen({
             {shuffledAnswers.map(([opt, text], i) => (
               <motion.button
                 key={`${question.id}-${opt}-${i}`}
-               onClick={() => {
-  onAnswer(opt);
-  setTimeout(() => {
-    onNext(opt);
-  }, 180);
-}}
+                onClick={() => {
+                  onAnswer(opt);
+                  setTimeout(() => {
+                    onNext(opt);
+                  }, 180);
+                }}
                 className={`option-card w-full text-left px-5 py-4 rounded-sm flex items-start gap-4 ${
                   selectedAnswer === opt ? 'selected' : ''
                 }`}
@@ -594,28 +612,27 @@ function QuestionScreen({
           </div>
         )}
 
-        <AnimatePresence>
-          {(question.questionType === 'open-end' ? (openEndAnswer ?? '').trim().length > 0 : !!selectedAnswer) && (
-            <motion.div
-              className="mt-8 flex justify-end"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
+        {question.questionType === 'open-end' && (openEndAnswer ?? '').trim().length > 0 && (
+          <div className="mt-8 flex justify-end">
+            <button
+              onClick={() => onNext()}
+              className="px-8 py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.15em] uppercase transition-transform hover:scale-105 active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
+                fontFamily: "'DM Sans', sans-serif",
+                clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+              }}
             >
-              <button
-                onClick={onNext}
-                className="px-8 py-3 text-[#0D1B2E] font-semibold text-sm tracking-[0.15em] uppercase transition-transform hover:scale-105 active:scale-95"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
-                  fontFamily: "'DM Sans', sans-serif",
-                  clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-                }}
-              >
-                {questionIndex === totalQuestions - 1 ? (lang === 'en' ? uiCopyEn.result : btnLastQuestion) : (lang === 'en' ? uiCopyEn.next : btnNext)}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {questionIndex === totalQuestions - 1
+                ? lang === 'en'
+                  ? uiCopyEn.result
+                  : btnLastQuestion
+                : lang === 'en'
+                ? uiCopyEn.next
+                : btnNext}
+            </button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -672,7 +689,7 @@ function GiveawayFormScreen({
 
   const submitMutation = trpc.quiz.submit.useMutation({
     onSuccess: () => {
-      setSubmitted(true);
+      onComplete();
     },
     onError: (err) => {
       toast.error('提交失敗，請再試一次：' + err.message);
@@ -1030,6 +1047,27 @@ function ResultScreen({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.8, type: 'spring', stiffness: 100 }}
       >
+        <div
+          className="mb-4 rounded-sm px-4 py-3 text-center"
+          style={{
+            background: 'rgba(212,168,67,0.12)',
+            border: '1px solid rgba(212,168,67,0.35)',
+          }}
+        >
+          <p
+            className="text-[#D4A843] text-sm font-semibold mb-1"
+            style={{ fontFamily: "'Noto Serif TC', serif" }}
+          >
+            {lang === 'en' ? 'Giveaway registration successful!' : '已成功登記抽獎！'}
+          </p>
+          <p
+            className="text-white/60 text-xs leading-relaxed"
+            style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+          >
+            {lang === 'en' ? 'Here is your exclusive boarding pass.' : '以下是你的專屬登機證。'}
+          </p>
+        </div>
+
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-[#D4A843]/40" />
           <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{lang === 'en' ? uiCopyEn.boardingPassLabel : 'Boarding Pass · 登機證'}</span>
@@ -1247,7 +1285,6 @@ function ResultScreen({
 export default function Home() {
   const [screen, setScreen] = useState<Screen>('language');
   const [lang, setLang] = useState<Lang>('zh');
-
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerType[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<AnswerType | null>(null);
@@ -1264,8 +1301,6 @@ export default function Home() {
     const row = configRows?.find((r) => r.configKey === 'hero_bg');
     return row?.configValue ?? HERO_BG;
   }, [configRows]);
-
-  const colors = useMemo(() => extractColors(configRows ?? []), [configRows]);
 
   const handleLanguageSelect = useCallback((selectedLang: Lang) => {
     setLang(selectedLang);
@@ -1288,7 +1323,6 @@ export default function Home() {
   const handleNext = useCallback((directAnswer?: AnswerType) => {
     const currentQuestion = allQuestions[questionIndex];
     const isOpenEnd = currentQuestion?.questionType === 'open-end';
-
     const finalAnswer = directAnswer ?? selectedAnswer;
 
     if (!isOpenEnd && !finalAnswer) return;
@@ -1362,22 +1396,17 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8F4EC]">
+    <div className="min-h-screen bg-[#0D1B2E]">
       <AnimatePresence mode="wait">
         {screen === 'language' && (
           <motion.div key="language" className="min-h-screen">
-            <LanguageScreen onSelect={handleLanguageSelect} />
+            <LanguageScreen onSelect={handleLanguageSelect} heroBg={heroBg} />
           </motion.div>
         )}
 
         {screen === 'landing' && (
           <motion.div key="landing" className="min-h-screen">
-            <LandingScreen
-              onStart={handleStart}
-              heroBg={heroBg}
-              configRows={configRows ?? []}
-              lang={lang}
-            />
+            <LandingScreen onStart={handleStart} heroBg={heroBg} configRows={configRows ?? []} lang={lang} />
           </motion.div>
         )}
 
@@ -1387,7 +1416,7 @@ export default function Home() {
               chapterIndex={chapterIndex}
               chapters={chapters}
               onContinue={handleChapterContinue}
-              overlayColor="rgba(255,253,248,0.72)"
+              overlayColor="rgba(13,27,46,0.48)"
             />
           </motion.div>
         )}
@@ -1399,16 +1428,14 @@ export default function Home() {
               selectedAnswer={selectedAnswer}
               openEndAnswer={openEndAnswers[questionIndex]}
               onAnswer={handleAnswer}
-              onOpenEndAnswer={(text) =>
-                setOpenEndAnswers((prev) => ({ ...prev, [questionIndex]: text }))
-              }
+              onOpenEndAnswer={(text) => setOpenEndAnswers((prev) => ({ ...prev, [questionIndex]: text }))}
               onNext={handleNext}
               onBack={handleBack}
               chapters={chapters}
               allQuestions={allQuestions}
               totalQuestions={totalQuestions}
-              overlayColor="rgba(255,253,248,0.72)"
-              questionCardBg="rgba(255,255,255,0.72)"
+              overlayColor="rgba(13,27,46,0.48)"
+              questionCardBg="rgba(13,27,46,0.72)"
               configRows={configRows ?? []}
               lang={lang}
             />
