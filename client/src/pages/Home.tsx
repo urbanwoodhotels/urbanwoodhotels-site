@@ -186,7 +186,7 @@ function LanguageScreen({
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0D1B2E]/45 via-[#0D1B2E]/35 to-[#0D1B2E]/65" />
+      <div className="absolute inset-0 bg-white/8" />
       <DecoCorners />
 
       <motion.div
@@ -263,7 +263,7 @@ function LandingScreen({
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0D1B2E]/60 via-[#0D1B2E]/50 to-[#0D1B2E]/80" />
+      <div className="absolute inset-0 bg-white/8" />
 
       <DecoCorners />
 
