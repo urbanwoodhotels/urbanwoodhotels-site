@@ -398,4 +398,3 @@ export function calculateResult(answers: AnswerType[]): AnswerType {
 }
  
 // trigger deploy
-update quizdata
