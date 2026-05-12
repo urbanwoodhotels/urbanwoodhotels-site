@@ -52,6 +52,8 @@ export const results: Record<
     boardingPassDestination: 'SLOW STAY',
     resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558792/urbanwood-quiz/qfywt9iquegioygkaxvp.jpg?v=1778558792944',
     resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558904/urbanwood-quiz/n9zgbissq4v2854w3yup.jpg?v=1778558905241',
+    boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558792/urbanwood-quiz/qfywt9iquegioygkaxvp.jpg?v=1778558792944',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558904/urbanwood-quiz/n9zgbissq4v2854w3yup.jpg?v=1778558905241',
   },
   B: {
     id: 'B',
@@ -68,6 +70,8 @@ export const results: Record<
     boardingPassDestination: 'LOCAL BITES',
     resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558813/urbanwood-quiz/re4t0rpamvz1fhwdfvjm.jpg?v=1778558814432',
     resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558917/urbanwood-quiz/bnjdyc2anjrioldyjmrc.jpg?v=1778558918337',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558813/urbanwood-quiz/re4t0rpamvz1fhwdfvjm.jpg?v=1778558814432',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558917/urbanwood-quiz/bnjdyc2anjrioldyjmrc.jpg?v=1778558918337',
   },
   C: {
     id: 'C',
@@ -84,6 +88,8 @@ export const results: Record<
     boardingPassDestination: 'FRAME & LIGHT',
     resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558831/urbanwood-quiz/wjhdcyzgrnl8ko5xay9u.jpg?v=1778558832668',
     resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558935/urbanwood-quiz/jccxod2fnenemisdvzbj.jpg?v=1778558935899',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558831/urbanwood-quiz/wjhdcyzgrnl8ko5xay9u.jpg?v=1778558832668',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558935/urbanwood-quiz/jccxod2fnenemisdvzbj.jpg?v=1778558935899',
   },
   D: {
     id: 'D',
@@ -100,6 +106,8 @@ export const results: Record<
     boardingPassDestination: 'CITY DEPTH',
     resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558848/urbanwood-quiz/qdh0cwaxc0fms7rvy5sf.jpg?v=1778558849148',
     resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558962/urbanwood-quiz/djwgnbkkmipkk3xgmvbs.jpg?v=1778558963420',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558848/urbanwood-quiz/qdh0cwaxc0fms7rvy5sf.jpg?v=1778558849148',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558962/urbanwood-quiz/djwgnbkkmipkk3xgmvbs.jpg?v=1778558963420',
   },
   E: {
     id: 'E',
@@ -116,6 +124,8 @@ export const results: Record<
     boardingPassDestination: 'NIGHT VIBE',
     resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558866/urbanwood-quiz/n9gy7v4omnvaaqidiajr.jpg?v=1778558866864',
     resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778559038/urbanwood-quiz/qqgkjptfwiksbt0soiqx.jpg?v=1778559040970',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558866/urbanwood-quiz/n9gy7v4omnvaaqidiajr.jpg?v=1778558866864',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778559038/urbanwood-quiz/qqgkjptfwiksbt0soiqx.jpg?v=1778559040970',
   },
   F: {
     id: 'F',
@@ -132,6 +142,8 @@ export const results: Record<
     boardingPassDestination: 'HUMAN LINKS',
     resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558880/urbanwood-quiz/tcbrs9rrzuljm2p5gndw.jpg?v=1778558881733',
     resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778559082/urbanwood-quiz/gzqpyjowgxezritn4jbs.jpg?v=1778559083928',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558880/urbanwood-quiz/tcbrs9rrzuljm2p5gndw.jpg?v=1778558881733',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778559082/urbanwood-quiz/gzqpyjowgxezritn4jbs.jpg?v=1778559083928',
   },
 };
 
