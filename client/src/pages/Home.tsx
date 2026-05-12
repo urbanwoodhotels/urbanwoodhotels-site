@@ -426,6 +426,7 @@ function QuestionScreen({
   onAnswer,
   onOpenEndAnswer,
   onNext,
+  onBack, 
   chapters,
   allQuestions,
   totalQuestions,
@@ -439,7 +440,8 @@ function QuestionScreen({
   openEndAnswer?: string;
   onAnswer: (a: AnswerType) => void;
   onOpenEndAnswer?: (text: string) => void;
-  onNext: () => void;
+  onNext: (directAnswer?: AnswerType) => void;
+  onBack: () => void;
   chapters: Chapter[];
   allQuestions: import('@/lib/quizData').Question[];
   totalQuestions: number;
@@ -494,6 +496,15 @@ function QuestionScreen({
   total={totalQuestions}
   lang={lang}
 />
+        {questionIndex > 0 && (
+  <button
+    onClick={onBack}
+    className="mt-3 text-[#213047]/60 text-xs tracking-[0.15em] uppercase hover:text-[#B99855] transition-colors"
+    style={{ fontFamily: "'DM Sans', sans-serif" }}
+  >
+    ← {lang === 'en' ? 'Back' : '上一題'}
+  </button>
+)}
         <div className="mt-3 flex items-center gap-2">
           <span
             className="text-[10px] px-2 py-0.5 rounded-sm tracking-widest uppercase"
@@ -544,7 +555,12 @@ function QuestionScreen({
             {shuffledAnswers.map(([opt, text], i) => (
               <motion.button
                 key={`${question.id}-${opt}-${i}`}
-                onClick={() => onAnswer(opt)}
+               onClick={() => {
+  onAnswer(opt);
+  setTimeout(() => {
+    onNext(opt);
+  }, 180);
+}}
                 className={`option-card w-full text-left px-5 py-4 rounded-sm flex items-start gap-4 ${
                   selectedAnswer === opt ? 'selected' : ''
                 }`}
