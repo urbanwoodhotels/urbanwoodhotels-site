@@ -50,8 +50,8 @@ export const results: Record<
     urbanwoodMatch:
       '城木酒店以木系簡約設計與溫潤氛圍，回應你對慢活的嚮往。在這裡，你可以放下節奏，讓自己完全放鬆，享受屬於自己的寧靜時光。',
     boardingPassDestination: 'SLOW STAY',
-    resultImage: '',
-    resultImageEn: '',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558792/urbanwood-quiz/qfywt9iquegioygkaxvp.jpg?v=1778558792944',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558904/urbanwood-quiz/n9zgbissq4v2854w3yup.jpg?v=1778558905241',
   },
   B: {
     id: 'B',
@@ -66,8 +66,8 @@ export const results: Record<
     urbanwoodMatch:
       '城木酒店連結著地道生活圈，讓你隨時走進街區尋找美食，再帶著滿足回到舒適空間。',
     boardingPassDestination: 'LOCAL BITES',
-    resultImage: '',
-    resultImageEn: '',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558813/urbanwood-quiz/re4t0rpamvz1fhwdfvjm.jpg?v=1778558814432',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558917/urbanwood-quiz/bnjdyc2anjrioldyjmrc.jpg?v=1778558918337',
   },
   C: {
     id: 'C',
@@ -82,8 +82,8 @@ export const results: Record<
     urbanwoodMatch:
       '城木酒店的設計細節與空間層次，讓你隨時都能捕捉到富有質感的畫面。',
     boardingPassDestination: 'FRAME & LIGHT',
-    resultImage: '',
-    resultImageEn: '',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558831/urbanwood-quiz/wjhdcyzgrnl8ko5xay9u.jpg?v=1778558832668',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558935/urbanwood-quiz/jccxod2fnenemisdvzbj.jpg?v=1778558935899',
   },
   D: {
     id: 'D',
@@ -98,8 +98,8 @@ export const results: Record<
     urbanwoodMatch:
       '城木酒店位於城市與社區交界，讓你輕鬆深入不同生活層次，開展屬於你的探索路線。',
     boardingPassDestination: 'CITY DEPTH',
-    resultImage: '',
-    resultImageEn: '',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558848/urbanwood-quiz/qdh0cwaxc0fms7rvy5sf.jpg?v=1778558849148',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558962/urbanwood-quiz/djwgnbkkmipkk3xgmvbs.jpg?v=1778558963420',
   },
   E: {
     id: 'E',
@@ -114,8 +114,8 @@ export const results: Record<
     urbanwoodMatch:
       '城木酒店在夜晚成為延續感受的空間，讓你在靜謐中慢慢消化屬於城市的情緒。',
     boardingPassDestination: 'NIGHT VIBE',
-    resultImage: '',
-    resultImageEn: '',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558866/urbanwood-quiz/n9gy7v4omnvaaqidiajr.jpg?v=1778558866864',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778559038/urbanwood-quiz/qqgkjptfwiksbt0soiqx.jpg?v=1778559040970',
   },
   F: {
     id: 'F',
@@ -130,8 +130,8 @@ export const results: Record<
     urbanwoodMatch:
       '城木酒店連結社區與旅人，讓你更容易與城市產生互動，成為其中的一部分。',
     boardingPassDestination: 'HUMAN LINKS',
-    resultImage: '',
-    resultImageEn: '',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558880/urbanwood-quiz/tcbrs9rrzuljm2p5gndw.jpg?v=1778558881733',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778559082/urbanwood-quiz/gzqpyjowgxezritn4jbs.jpg?v=1778559083928',
   },
 };
 
