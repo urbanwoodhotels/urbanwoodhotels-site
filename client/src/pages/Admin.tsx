@@ -959,6 +959,7 @@ function FormCopyTab() {
 function ResultsTab() {
   const utils = trpc.useUtils();
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
+
   const setConfigMutation = trpc.admin.setConfig.useMutation({
     onSuccess: () => {
       utils.quiz.getConfig.invalidate();
@@ -1055,12 +1056,14 @@ function ResultsTab() {
 
   useEffect(() => {
     const loaded: Record<ResultId, Record<string, string>> = JSON.parse(JSON.stringify(defaultValues));
+
     resultIds.forEach((id) => {
       resultFields.forEach((f) => {
         const key = `result_${id}_${f.suffix}`;
         if (savedMap[key]) loaded[id][f.suffix] = savedMap[key];
       });
     });
+
     setValues(loaded);
   }, [savedMap]);
 
@@ -1092,7 +1095,13 @@ function ResultsTab() {
                     <textarea
                       value={values[id][field.suffix]}
                       onChange={(e) =>
-                        setValues((prev) => ({ ...prev, [id]: { ...prev[id], [field.suffix]: e.target.value } }))
+                        setValues((prev) => ({
+                          ...prev,
+                          [id]: {
+                            ...prev[id],
+                            [field.suffix]: e.target.value,
+                          },
+                        }))
                       }
                       rows={3}
                       className="flex-1 bg-white/5 border border-[#D4A843]/20 text-white text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-[#D4A843]/40 resize-none"
@@ -1103,43 +1112,83 @@ function ResultsTab() {
                       type="text"
                       value={values[id][field.suffix]}
                       onChange={(e) =>
-                        setValues((prev) => ({ ...prev, [id]: { ...prev[id], [field.suffix]: e.target.value } }))
+                        setValues((prev) => ({
+                          ...prev,
+                          [id]: {
+                            ...prev[id],
+                            [field.suffix]: e.target.value,
+                          },
+                        }))
                       }
                       className="flex-1 bg-white/5 border border-[#D4A843]/20 text-white text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-[#D4A843]/40"
                       style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
                     />
                   )}
+
                   <button
                     onClick={() =>
-                      setConfigMutation.mutate({ key: `result_${id}_${field.suffix}`, value: values[id][field.suffix] })
+                      setConfigMutation.mutate({
+                        key: `result_${id}_${field.suffix}`,
+                        value: values[id][field.suffix],
+                      })
                     }
                     disabled={setConfigMutation.isPending}
                     className="px-3 py-2 text-[#0D1B2E] text-[10px] font-semibold tracking-wider uppercase disabled:opacity-50 flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #D4A843, #E8C56A)', fontFamily: "'DM Sans', sans-serif" }}
+                    style={{
+                      background: 'linear-gradient(135deg, #D4A843, #E8C56A)',
+                      fontFamily: "'DM Sans', sans-serif",
+                    }}
                   >
                     儲存
                   </button>
                 </div>
               ) : (
-               <div className="space-y-2">
- <ImageUploader
-  currentUrl={values[id][field.suffix]}
-  onUploaded={(url) => {
-    setValues((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        [field.suffix]: url,
-      },
-    }));
+                <div className="space-y-2">
+                  <ImageUploader
+                    currentUrl={values[id][field.suffix]}
+                    onUploaded={(url) => {
+                      setValues((prev) => ({
+                        ...prev,
+                        [id]: {
+                          ...prev[id],
+                          [field.suffix]: url,
+                        },
+                      }));
 
-    setConfigMutation.mutate({
-      key: `result_${id}_${field.suffix}`,
-      value: url,
-    });
-  }}
-/>
+                      setConfigMutation.mutate({
+                        key: `result_${id}_${field.suffix}`,
+                        value: url,
+                      });
+                    }}
+                  />
 
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setValues((prev) => ({
+                        ...prev,
+                        [id]: {
+                          ...prev[id],
+                          [field.suffix]: '',
+                        },
+                      }));
+
+                      setConfigMutation.mutate({
+                        key: `result_${id}_${field.suffix}`,
+                        value: '',
+                      });
+
+                      toast.success('已重置為 quizData.ts 預設圖片');
+                    }}
+                    className="px-4 py-2 text-white/50 text-xs tracking-wider uppercase border border-white/10 hover:border-white/20 hover:text-white/70 transition-colors"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    Reset / 清空圖片
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       ))}
     </div>
