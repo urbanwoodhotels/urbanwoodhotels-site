@@ -1021,14 +1021,43 @@ function ResultScreen({
     }
   };
 
-  const resultBgMap: Record<AnswerType, string> = {
-    A: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
-    B: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
-    C: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
-    D: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
-    E: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
-    F: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778554553/urbanwood-quiz/zjwqxyw5jzsu13oe9xeq.jpg?v=1778554553634',
-  };
+ const resultBgMap: Record<
+  AnswerType,
+  {
+    zh: string;
+    en: string;
+  }
+> = {
+  A: {
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555734/urbanwood-quiz/dbc66yph7hr79drb28rb.jpg?v=1778555734641',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555866/urbanwood-quiz/vhp8bkwe3vpagrfen1le.jpg?v=1778555866835',
+  },
+
+  B: {
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555761/urbanwood-quiz/klj89pircimshcejg5bq.jpg?v=1778555761888',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555898/urbanwood-quiz/uks2hmsojuva6rbwobzh.jpg?v=1778555898732',
+  },
+
+  C: {
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555780/urbanwood-quiz/afnhrwtsypezbczukjdf.jpg?v=1778555781009',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555918/urbanwood-quiz/mssxnu3iqrqdehe72fo0.jpg?v=1778555919669',
+  },
+
+  D: {
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555804/urbanwood-quiz/e3xoty9pktuwc4c3g9om.jpg?v=1778555805652',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555937/urbanwood-quiz/vlpaskr2vm1mf8y8unjo.jpg?v=1778555937802',
+  },
+
+  E: {
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555822/urbanwood-quiz/gsf4qx7f0pdinjxp3e2l.jpg?v=1778555823684',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555956/urbanwood-quiz/y6eugnougpueef3u9n2y.jpg?v=1778555956944',
+  },
+
+  F: {
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555841/urbanwood-quiz/nb2hwx8evfapenyxyshq.jpg?v=1778555842687',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555976/urbanwood-quiz/fkbimp5fchxqmifdfbgj.jpg?v=1778555977378',
+  },
+};
 
   return (
     <motion.div
@@ -1037,8 +1066,23 @@ function ResultScreen({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${resultBgMap[resultType]})` }} />
-      <div className="absolute inset-0 bg-[#0D1B2E]/80 backdrop-blur-sm" />
+      <div
+  className="absolute inset-0 bg-cover bg-center"
+  style={{
+    backgroundImage: `url(${
+      resultBgMap[resultType][lang === 'en' ? 'en' : 'zh']
+    })`,
+  }}
+/>
+<div
+  className="absolute inset-0 backdrop-blur-[1px]"
+  style={{
+    background:
+      'linear-gradient(to bottom, rgba(13,27,46,0.28), rgba(13,27,46,0.38), rgba(13,27,46,0.52))',
+  }}
+/>
+
+<DecoCorners />      
       <DecoCorners />
 
       <motion.div
