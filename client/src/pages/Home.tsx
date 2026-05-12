@@ -1029,33 +1029,33 @@ function ResultScreen({
   }
 > = {
   A: {
-    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555734/urbanwood-quiz/dbc66yph7hr79drb28rb.jpg?v=1778555734641',
-    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555866/urbanwood-quiz/vhp8bkwe3vpagrfen1le.jpg?v=1778555866835',
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
   },
 
   B: {
-    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555761/urbanwood-quiz/klj89pircimshcejg5bq.jpg?v=1778555761888',
-    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555898/urbanwood-quiz/uks2hmsojuva6rbwobzh.jpg?v=1778555898732',
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
   },
 
   C: {
-    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555780/urbanwood-quiz/afnhrwtsypezbczukjdf.jpg?v=1778555781009',
-    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555918/urbanwood-quiz/mssxnu3iqrqdehe72fo0.jpg?v=1778555919669',
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
   },
 
   D: {
-    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555804/urbanwood-quiz/e3xoty9pktuwc4c3g9om.jpg?v=1778555805652',
-    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555937/urbanwood-quiz/vlpaskr2vm1mf8y8unjo.jpg?v=1778555937802',
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
   },
 
   E: {
-    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555822/urbanwood-quiz/gsf4qx7f0pdinjxp3e2l.jpg?v=1778555823684',
-    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555956/urbanwood-quiz/y6eugnougpueef3u9n2y.jpg?v=1778555956944',
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
   },
 
   F: {
-    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555841/urbanwood-quiz/nb2hwx8evfapenyxyshq.jpg?v=1778555842687',
-    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778555976/urbanwood-quiz/fkbimp5fchxqmifdfbgj.jpg?v=1778555977378',
+    zh: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
+    en: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1778558056/urbanwood-quiz/rtbtsopx9lmkwxbpizni.jpg?v=1778558057459',
   },
 };
 
