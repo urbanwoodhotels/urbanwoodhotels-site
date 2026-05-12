@@ -856,10 +856,12 @@ function ResultScreen({
   resultType,
   onRestart,
   configRows,
+  lang,
 }: {
   resultType: AnswerType;
   onRestart: () => void;
   configRows?: { configKey: string; configValue: string }[];
+  lang: Lang;
 }) {
   const baseResult = results[resultType];
   const cfg = Object.fromEntries((configRows ?? []).map((r) => [r.configKey, r.configValue]));
@@ -1174,7 +1176,8 @@ export default function Home() {
   const [openEndAnswers, setOpenEndAnswers] = useState<Record<number, string>>({});
   const [chapterIndex, setChapterIndex] = useState(0);
   const [resultType, setResultType] = useState<AnswerType | null>(null);
-
+  const [lang, setLang] = useState<Lang>('zh');
+  
   const { data: configRows } = trpc.quiz.getConfig.useQuery();
   const chapters = useMemo(() => applyConfig(configRows ?? []), [configRows]);
   const allQuestions = useMemo(() => chapters.flatMap((c) => c.questions), [chapters]);
@@ -1312,12 +1315,13 @@ export default function Home() {
           </motion.div>
         )}
 
-        {screen === 'result' && resultType && (
-          <motion.div key="result" className="min-h-screen">
-            <ResultScreen resultType={resultType} onRestart={handleRestart} configRows={configRows ?? []} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+       {screen === 'result' && resultType && (
+  <motion.div key="result" className="min-h-screen">
+    <ResultScreen
+      resultType={resultType}
+      onRestart={handleRestart}
+      configRows={configRows ?? []}
+      lang={lang}
+    />
+  </motion.div>
+)}
