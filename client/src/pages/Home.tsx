@@ -119,7 +119,75 @@ type Screen = 'language' | 'landing' | 'chapter-intro' | 'question' | 'giveaway-
 
 const HERO_BG =
   'https://res.cloudinary.com/defqvpbk4/image/upload/v1778557637/urbanwood-quiz/oz4xhbxdqqt1vpdnzdpa.jpg?v=1778557638383';
-
+const chapterStyleMap: Record<
+  number,
+  {
+    introBg?: string;
+    questionBg?: string;
+    titleColor: string;
+    textColor: string;
+    sceneColor: string;
+    questionTextColor: string;
+    buttonBg: string;
+    buttonText: string;
+    answerBoxBg: string;
+    answerBorder: string;
+    answerText: string;
+  }
+> = {
+  1: {
+    introBg: '',
+    questionBg: '',
+    titleColor: '#F8F4EC',
+    textColor: '#E9EFEA',
+    sceneColor: '#D4A843',
+    questionTextColor: '#FFFFFF',
+    buttonBg: '#D4A843',
+    buttonText: '#1F2A25',
+    answerBoxBg: 'rgba(13,27,46,0.72)',
+    answerBorder: 'rgba(212,168,67,0.35)',
+    answerText: '#FFFFFF',
+  },
+  2: {
+    introBg: '',
+    questionBg: '',
+    titleColor: '#F8F4EC',
+    textColor: '#E9EFEA',
+    sceneColor: '#D4A843',
+    questionTextColor: '#FFFFFF',
+    buttonBg: '#D4A843',
+    buttonText: '#1F2A25',
+    answerBoxBg: 'rgba(13,27,46,0.72)',
+    answerBorder: 'rgba(212,168,67,0.35)',
+    answerText: '#FFFFFF',
+  },
+  3: {
+    introBg: '',
+    questionBg: '',
+    titleColor: '#FFFFFF',
+    textColor: '#E9EFEA',
+    sceneColor: '#D4A843',
+    questionTextColor: '#FFFFFF',
+    buttonBg: '#5F7E72',
+    buttonText: '#FFFFFF',
+    answerBoxBg: 'rgba(13,27,46,0.68)',
+    answerBorder: 'rgba(255,255,255,0.28)',
+    answerText: '#FFFFFF',
+  },
+  4: {
+    introBg: '',
+    questionBg: '',
+    titleColor: '#F6E6C8',
+    textColor: '#FFFFFF',
+    sceneColor: '#D4A843',
+    questionTextColor: '#FFFFFF',
+    buttonBg: '#D4A843',
+    buttonText: '#1F2A25',
+    answerBoxBg: 'rgba(13,27,46,0.76)',
+    answerBorder: 'rgba(212,168,67,0.4)',
+    answerText: '#FFFFFF',
+  },
+};
 // ─── Geometric Art Deco Corner Decoration ────────────────────────────────────
 function DecoCorners() {
   return (
@@ -373,7 +441,8 @@ function ChapterIntroScreen({
 }) {
   const overlay = overlayColor ?? 'rgba(13,27,46,0.65)';
   const chapter = chapters[chapterIndex];
-
+const chapterStyle = chapterStyleMap[chapter.id] ?? chapterStyleMap[1];
+const introBg = chapterStyle.introBg || chapter.bgImage;
   return (
     <motion.div
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
@@ -384,7 +453,7 @@ function ChapterIntroScreen({
     >
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-        style={{ backgroundImage: `url(${chapter.bgImage})` }}
+        style={{ backgroundImage: `url(${introBg})` }}
       />
       <div
         className="absolute inset-0"
@@ -408,18 +477,34 @@ function ChapterIntroScreen({
           <div className="h-px w-8 bg-[#D4A843]/60" />
         </div>
 
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-          {chapter.subtitle}
-        </h2>
+        <h2
+  className="text-3xl md:text-5xl font-bold mb-3 drop-shadow-md"
+  style={{
+    fontFamily: "'Noto Serif TC', serif",
+    color: chapterStyle.titleColor,
+  }}
+>
+  {chapter.subtitle}
+</h2>
 
-        <p className="text-[#D4A843]/80 text-sm tracking-widest mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          ✦ {chapter.scene} ✦
-        </p>
+<p
+  className="text-sm tracking-widest mb-8"
+  style={{
+    fontFamily: "'DM Sans', sans-serif",
+    color: chapterStyle.sceneColor,
+  }}
+>
+  ✦ {chapter.scene} ✦
+</p>
 
         <button
           onClick={onContinue}
           className="px-8 py-3 border border-[#D4A843]/60 text-[#D4A843] text-sm tracking-[0.2em] uppercase hover:bg-[#D4A843]/10 transition-all duration-300"
-          style={{ fontFamily: "'DM Sans', sans-serif" }}
+          style={{
+  fontFamily: "'DM Sans', sans-serif",
+  background: chapterStyle.buttonBg,
+  color: chapterStyle.buttonText,
+}}
         >
           進入場景 →
         </button>
@@ -467,6 +552,8 @@ function QuestionScreen({
   const btnLastQuestion = cfg['btn_last_question'] ?? '查看結果 ✶';
   const question = allQuestions[questionIndex];
   const currentChapter = chapters.find((c) => c.questions.some((q) => q.id === question.id))!;
+  const chapterStyle = chapterStyleMap[currentChapter.id] ?? chapterStyleMap[1];
+const questionBg = chapterStyle.questionBg || currentChapter.bgImage;
   const displayQuestionText = lang === 'en' ? questionTextEn[question.id] ?? question.text : question.text;
   const displayChapterSubtitle = lang === 'en' ? chapterCopyEn[currentChapter.id]?.subtitle ?? currentChapter.subtitle : currentChapter.subtitle;
   const displaySensoryType = lang === 'en' ? sensoryLabel[question.sensoryType] ?? question.sensoryType : question.sensoryType;
@@ -495,7 +582,7 @@ function QuestionScreen({
     >
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${currentChapter.bgImage})` }}
+       style={{ backgroundImage: `url(${questionBg})` }}
       />
       <div
         className="absolute inset-0 backdrop-blur-[1px]"
@@ -543,8 +630,11 @@ function QuestionScreen({
 
       <div className="relative z-10 flex-1 flex flex-col justify-center px-6 pb-8 max-w-2xl mx-auto w-full">
         <motion.h2
-          className="text-xl md:text-2xl font-semibold text-white mb-8 leading-relaxed"
-          style={{ fontFamily: "'Noto Serif TC', serif" }}
+          className="text-xl md:text-2xl font-semibold mb-8 leading-relaxed drop-shadow-md"
+          style={{
+  fontFamily: "'Noto Serif TC', serif",
+  color: chapterStyle.questionTextColor,
+}}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -582,7 +672,10 @@ function QuestionScreen({
                 className={`option-card w-full text-left px-5 py-4 rounded-sm flex items-start gap-4 ${
                   selectedAnswer === opt ? 'selected' : ''
                 }`}
-                style={{ background: selectedAnswer === opt ? undefined : cardBg }}
+                style={{
+  background: selectedAnswer === opt ? 'rgba(212,168,67,0.2)' : chapterStyle.answerBoxBg,
+  border: `1px solid ${chapterStyle.answerBorder}`,
+}}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.15 + i * 0.08 }}
@@ -602,7 +695,7 @@ function QuestionScreen({
                   className="text-sm md:text-base leading-relaxed"
                   style={{
                     fontFamily: "'Noto Sans TC', sans-serif",
-                    color: selectedAnswer === opt ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.75)',
+                    color: selectedAnswer === opt ? '#FFFFFF' : chapterStyle.answerText,
                   }}
                 >
                   {lang === 'en' ? optionsEn[question.id]?.[opt] ?? text : text}
@@ -649,7 +742,7 @@ function GiveawayFormScreen({
   resultType: AnswerType;
   onComplete: () => void;
   configRows?: { configKey: string; configValue: string }[];
-  openEndAnswers?: Record<number, string>;
+  openEndAnswers?: Record<string, string>;
   lang: Lang;
 }) {
   const result = results[resultType];
@@ -716,20 +809,21 @@ function GiveawayFormScreen({
     }
 
     submitMutation.mutate({
-      platform,
-      socialHandle: socialHandle.trim(),
-      name: name.trim(),
-      email: email.trim(),
-      resultType,
-      resultName: result.name,
-      marketingConsent,
-      openEndAnswers:
-        openEndAnswers && Object.keys(openEndAnswers).length > 0
-          ? Object.fromEntries(Object.entries(openEndAnswers).map(([k, v]) => [String(k), v]))
-          : undefined,
-    });
+  platform,
+  socialHandle: socialHandle.trim(),
+  name: name.trim(),
+  email: email.trim(),
+  resultType,
+  resultName: result.name,
+  marketingConsent,
+  openEndAnswers:
+    openEndAnswers && Object.keys(openEndAnswers).length > 0
+      ? Object.fromEntries(
+          Object.entries(openEndAnswers).map(([k, v]) => [String(k), String(v)])
+        )
+      : undefined,
+});
   };
-
   const inputClass =
     "w-full bg-white/5 border border-[#D4A843]/20 text-white text-sm px-3 py-2 rounded-sm placeholder:text-white/30 focus:outline-none focus:border-[#D4A843]/50 transition-colors";
   const labelClass = "block text-[#D4A843]/60 text-[10px] tracking-[0.2em] uppercase mb-1 font-['DM_Sans']";

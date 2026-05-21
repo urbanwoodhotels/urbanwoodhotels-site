@@ -83,7 +83,7 @@ export async function getSubmissions(): Promise<Submission[]> {
 }
 
 export async function submitQuiz(
-  input: Omit<Submission, 'id' | 'createdAt' | 'marketingConsent'> & {
+  input: Omit<Submission, 'id' | 'createdAt' | 'marketingConsent' | 'openEndAnswers'> & {
     marketingConsent?: boolean;
     openEndAnswers?: Record<string, string>;
   }

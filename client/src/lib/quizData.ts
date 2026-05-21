@@ -35,6 +35,8 @@ export const results: Record<
     boardingPassDestination: string;
     resultImage?: string;
     resultImageEn?: string;
+    boardingPassImage?: string;
+boardingPassImageEn?: string;
   }
 > = {
   A: {
