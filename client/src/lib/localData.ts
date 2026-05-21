@@ -1,3 +1,4 @@
+import { supabase } from './supabase';
 import type { AnswerType, Chapter, SensoryType, QuestionType } from './quizData';
 import { chapters as defaultChapters } from './quizData';
 
@@ -53,49 +54,89 @@ export function saveConfigRow(key: string, value: string) {
   return { success: true as const };
 }
 
-export function getSubmissions(): Submission[] {
-  return readJson<Submission[]>(STORAGE_KEYS.submissions, []).sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+export async function getSubmissions(): Promise<Submission[]> {
+  const { data, error } = await supabase
+    .from('submissions')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return (data ?? []).map((r: any) => ({
+    id: r.id,
+    platform: r.platform,
+    socialHandle: r.social_handle,
+    name: r.name,
+    phone: r.phone,
+    email: r.email,
+    resultType: r.result_type,
+    resultName: r.result_name,
+    marketingConsent: r.marketing_consent ? 1 : 0,
+    openEndAnswers: r.open_end_answers
+      ? JSON.stringify(r.open_end_answers)
+      : null,
+    createdAt: r.created_at,
+  }));
 }
 
-export function submitQuiz(
+export async function submitQuiz(
   input: Omit<Submission, 'id' | 'createdAt' | 'marketingConsent'> & {
     marketingConsent?: boolean;
     openEndAnswers?: Record<string, string>;
   }
 ) {
-  const submissions = getSubmissions();
-  const item: Submission = {
-    id: submissions.length ? Math.max(...submissions.map((s) => s.id)) + 1 : 1,
-    platform: input.platform,
-    socialHandle: input.socialHandle,
-    name: input.name,
-    phone: input.phone,
-    email: input.email,
-    resultType: input.resultType,
-    resultName: input.resultName,
-    marketingConsent: input.marketingConsent ? 1 : 0,
-    openEndAnswers: input.openEndAnswers ? JSON.stringify(input.openEndAnswers) : null,
-    createdAt: new Date().toISOString(),
-  };
-  submissions.unshift(item);
-  writeJson(STORAGE_KEYS.submissions, submissions);
+  const { error } = await supabase.from('submissions').insert([
+    {
+      platform: input.platform,
+      social_handle: input.socialHandle,
+      name: input.name,
+      phone: input.phone ?? null,
+      email: input.email,
+      result_type: input.resultType,
+      result_name: input.resultName,
+      marketing_consent: input.marketingConsent ?? false,
+      open_end_answers: input.openEndAnswers ?? null,
+    },
+  ]);
+
+  if (error) {
+    console.error(error);
+    throw new Error('提交失敗');
+  }
+
   return { success: true as const };
-}
+} 
 
-export function getStats() {
-  const rows = getSubmissions();
+export async function getStats() {
+  const rows = await getSubmissions();
+
   const total = rows.length;
-  const byResult: Record<AnswerType, number> = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
-  const byPlatform = { instagram: 0, facebook: 0 };
+  const byResult: Record<AnswerType, number> = {
+    A: 0,
+    B: 0,
+    C: 0,
+    D: 0,
+    E: 0,
+    F: 0,
+  };
+  const byPlatform = {
+    instagram: 0,
+    facebook: 0,
+  };
 
-  rows.forEach((r) => {
+  rows.forEach((r: Submission) => {
     byResult[r.resultType] += 1;
     byPlatform[r.platform] += 1;
   });
 
-  return { total, byResult, byPlatform };
+  return {
+    total,
+    byResult,
+    byPlatform,
+  };
 }
 
 export function loginAdmin(password: string) {
