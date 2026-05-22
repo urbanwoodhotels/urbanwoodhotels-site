@@ -263,24 +263,13 @@ function LanguageScreen({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <p className="text-[#D4A843] text-xs tracking-[0.3em] uppercase mb-4 font-['DM_Sans']">
-          Urbanwood Hotel · Hung Hom
-        </p>
-
-        <h1
-          className="text-4xl font-bold text-white mb-3 leading-tight"
-          style={{ fontFamily: "'Noto Serif TC', serif" }}
-        >
-          城木漫遊之旅
-        </h1>
-
-        <p
-          className="text-white/70 text-sm mb-8 leading-relaxed"
-          style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-        >
-          請先選擇語言<br />
-          Please select your language
-        </p>
+      <p
+  className="text-white/70 text-sm mb-8 leading-relaxed"
+  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+>
+  請先選擇語言<br />
+  Please select your language
+</p>
 
         <div className="space-y-3">
           <button
@@ -471,32 +460,18 @@ const introBg = chapterStyle.introBg || chapter.bgImage;
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.7 }}
       >
-        <div className="mb-4 flex items-center gap-3">
-          <div className="h-px w-8 bg-[#D4A843]/60" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{chapter.title}</span>
-          <div className="h-px w-8 bg-[#D4A843]/60" />
-        </div>
-
-        <h2
-  className="text-3xl md:text-5xl font-bold mb-3 drop-shadow-md"
-  style={{
-    fontFamily: "'Noto Serif TC', serif",
-    color: chapterStyle.titleColor,
-  }}
->
-  {chapter.subtitle}
-</h2>
-
-<p
-  className="text-sm tracking-widest mb-8"
+        <button
+  onClick={onContinue}
+  className="px-8 py-3 text-sm tracking-[0.2em] uppercase transition-all duration-300"
   style={{
     fontFamily: "'DM Sans', sans-serif",
-    color: chapterStyle.sceneColor,
+    background: chapterStyle.buttonBg,
+    color: chapterStyle.buttonText,
+    border: `1px solid ${chapterStyle.buttonBg}`,
   }}
 >
-  ✦ {chapter.scene} ✦
-</p>
-
+  進入場景 →
+</button>
         <button
           onClick={onContinue}
           className="px-8 py-3 border border-[#D4A843]/60 text-[#D4A843] text-sm tracking-[0.2em] uppercase hover:bg-[#D4A843]/10 transition-all duration-300"
