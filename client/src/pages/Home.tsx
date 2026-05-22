@@ -264,7 +264,7 @@ function LanguageScreen({
         transition={{ duration: 0.7 }}
       >
       <p
-  className="text-sm mb-16 leading-relaxed"
+  className="text-sm mb-8 leading-relaxed"
   style={{
     fontFamily: "'Noto Sans TC', sans-serif",
     color: '#8B6B4A',
@@ -458,7 +458,7 @@ const introBg = chapterStyle.introBg || chapter.bgImage;
       <DecoCorners />
 
       <motion.div
-  className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg"
+  className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg pt-28 md:pt-36"
   initial={{ opacity: 0, scale: 0.95 }}
   animate={{ opacity: 1, scale: 1 }}
   transition={{ delay: 0.2, duration: 0.7 }}
