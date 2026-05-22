@@ -264,8 +264,11 @@ function LanguageScreen({
         transition={{ duration: 0.7 }}
       >
       <p
-  className="text-white/70 text-sm mb-8 leading-relaxed"
-  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+  className="text-sm mb-16 leading-relaxed"
+  style={{
+    fontFamily: "'Noto Sans TC', sans-serif",
+    color: '#8B6B4A',
+  }}
 >
   請先選擇語言<br />
   Please select your language
@@ -455,35 +458,24 @@ const introBg = chapterStyle.introBg || chapter.bgImage;
       <DecoCorners />
 
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2, duration: 0.7 }}
-      >
-        <button
-  onClick={onContinue}
-  className="px-8 py-3 text-sm tracking-[0.2em] uppercase transition-all duration-300"
-  style={{
-    fontFamily: "'DM Sans', sans-serif",
-    background: chapterStyle.buttonBg,
-    color: chapterStyle.buttonText,
-    border: `1px solid ${chapterStyle.buttonBg}`,
-  }}
+  className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg"
+  initial={{ opacity: 0, scale: 0.95 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ delay: 0.2, duration: 0.7 }}
 >
-  進入場景 →
-</button>
-        <button
-          onClick={onContinue}
-          className="px-8 py-3 border border-[#D4A843]/60 text-[#D4A843] text-sm tracking-[0.2em] uppercase hover:bg-[#D4A843]/10 transition-all duration-300"
-          style={{
-  fontFamily: "'DM Sans', sans-serif",
-  background: chapterStyle.buttonBg,
-  color: chapterStyle.buttonText,
-}}
-        >
-          進入場景 →
-        </button>
-      </motion.div>
+  <button
+    onClick={onContinue}
+    className="px-8 py-3 text-sm tracking-[0.2em] uppercase transition-all duration-300"
+    style={{
+      fontFamily: "'DM Sans', sans-serif",
+      background: chapterStyle.buttonBg,
+      color: chapterStyle.buttonText,
+      border: `1px solid ${chapterStyle.buttonBg}`,
+    }}
+  >
+    進入場景 →
+  </button>
+</motion.div>
     </motion.div>
   );
 }
