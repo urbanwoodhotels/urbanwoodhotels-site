@@ -763,7 +763,10 @@ function GiveawayFormScreen({
     'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
   const successMsg =
     cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
-  const btnSubmitForm = cfg['btn_submit_form'] ?? '登記抽獎，查看結果';
+const btnSubmitForm =
+  lang === 'en'
+    ? 'Complete & Join Giveaway ✦'
+    : cfg['btn_submit_form'] ?? '完成並參加抽獎 ✦';
   const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
   const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
   const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
@@ -855,21 +858,14 @@ function GiveawayFormScreen({
         transition={{ delay: 0.2, duration: 0.6 }}
       >
         <div className="text-center mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px flex-1 bg-[#D4A843]/40" />
-            <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{almostThereLabel}</span>
-            <div className="h-px flex-1 bg-[#D4A843]/40" />
-          </div>
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <span className="text-3xl">{result.icon}</span>
-            <div>
-              <p className="text-[#D4A843]/60 text-[10px] tracking-[0.2em] font-['DM_Sans'] uppercase mb-0.5">{travelerTypeLabel}</p>
-              <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-                {lang === 'en' ? result.nameEn : result.name}
-              </h2>
-            </div>
-          </div>
-        </div>
+  <div className="flex items-center gap-3 mb-4">
+    <div className="h-px flex-1 bg-[#D4A843]/40" />
+    <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">
+      {almostThereLabel}
+    </span>
+    <div className="h-px flex-1 bg-[#D4A843]/40" />
+  </div>
+</div>
 
         <div
           className="rounded-sm p-6"
@@ -907,10 +903,10 @@ function GiveawayFormScreen({
                 style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
               >
                 <p className="text-white/80 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                  {lang === 'en' ? introEn : introZh}
+                  {introZh}
                 </p>
                 <p className="text-white/50 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                  {introEn}
+              
                 </p>
                 <a
                   href={termsUrl}
@@ -1009,7 +1005,7 @@ function GiveawayFormScreen({
                   </div>
                   <div>
                     <p className="text-white/70 text-[11px] leading-relaxed" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                      {lang === 'en' ? consentEn : consentZh}
+                      {consentZh}
                     </p>
                     <p className="text-white/40 text-[10px] leading-relaxed mt-1" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
                       {consentEn}
@@ -1095,32 +1091,49 @@ const result = {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const handleSaveImage = async () => {
-    setSaving(true);
-    try {
-      const html2canvas = (await import('html2canvas')).default;
-      const el = document.getElementById('boarding-pass-card');
-      if (!el) {
-        setSaving(false);
-        return;
-      }
-      const canvas = await html2canvas(el, {
-        backgroundColor: '#0D1B2E',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-      });
+ const handleSaveImage = async () => {
+  setSaving(true);
+
+  try {
+    if (boardingPassImage) {
+      const response = await fetch(boardingPassImage, { mode: 'cors' });
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
       const link = document.createElement('a');
+      link.href = url;
       link.download = `urbanwood-boarding-pass-${result.id}.png`;
-      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
       link.click();
-    } catch {
-      // ignore
-    } finally {
-      setSaving(false);
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+      return;
     }
-  };
+
+    const html2canvas = (await import('html2canvas')).default;
+    const el = document.getElementById('boarding-pass-card');
+    if (!el) return;
+
+    const canvas = await html2canvas(el, {
+      backgroundColor: '#0D1B2E',
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+    });
+
+    const link = document.createElement('a');
+    link.download = `urbanwood-boarding-pass-${result.id}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error(err);
+    toast.error(lang === 'en' ? 'Unable to save photo. Please long press the image to save.' : '未能儲存圖片，請長按圖片儲存。');
+  } finally {
+    setSaving(false);
+  }
+};
 
   const handleShare = () => {
     const text = lang === 'en'
