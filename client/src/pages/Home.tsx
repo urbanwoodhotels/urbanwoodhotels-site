@@ -333,24 +333,6 @@ function LandingScreen({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        <div className="mb-8 flex items-center gap-3">
-          <div className="h-px w-12 bg-[#D4A843]/60" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">
-            Urbanwood Hotel · Hung Hom
-          </span>
-          <div className="h-px w-12 bg-[#D4A843]/60" />
-        </div>
-
-        <motion.div
-          className="mb-6 w-20 h-20 rounded-full border-2 border-[#D4A843] flex flex-col items-center justify-center"
-          style={{ background: 'oklch(0.72 0.12 75 / 0.15)' }}
-          initial={{ scale: 0, rotate: -20 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ delay: 0.3, duration: 0.6, type: 'spring', stiffness: 200 }}
-        >
-          <span className="text-[#D4A843] text-2xl font-bold font-['Playfair_Display'] leading-none">2</span>
-          <span className="text-[#D4A843] text-[9px] tracking-[0.2em] font-['DM_Sans'] uppercase">{lang === 'en' ? landingCopy.anniversaryEn : landingCopy.anniversaryZh}</span>
-        </motion.div>
 
         <motion.p
   className="text-xs md:text-sm mb-10 max-w-md leading-relaxed"
