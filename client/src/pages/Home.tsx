@@ -328,7 +328,7 @@ function LandingScreen({
       <DecoCorners />
 
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center px-6"
+        className="relative z-10 flex flex-col items-center text-center px-6 pt-40 md:pt-48"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
