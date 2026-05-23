@@ -352,39 +352,30 @@ function LandingScreen({
           <span className="text-[#D4A843] text-[9px] tracking-[0.2em] font-['DM_Sans'] uppercase">{lang === 'en' ? landingCopy.anniversaryEn : landingCopy.anniversaryZh}</span>
         </motion.div>
 
-        <motion.h1
-          className="text-4xl md:text-6xl font-bold text-white mb-3 leading-tight"
-          style={{ fontFamily: "'Noto Serif TC', serif" }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.7 }}
-        >
-          {lang === 'en' ? landingCopy.titleEnLine1 : landingCopy.titleZhLine1}
-          <br />
-          <span className="text-[#D4A843]">{lang === 'en' ? landingCopy.titleEnHighlight : landingCopy.titleZhHighlight}</span>{lang === 'en' ? landingCopy.titleEnSuffix : landingCopy.titleZhSuffix}
-        </motion.h1>
-
         <motion.p
-          className="text-white/70 text-sm md:text-base mb-2 max-w-sm leading-relaxed"
-          style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          {lang === 'en' ? landingCopy.subtitleEn : landingCopy.subtitleZh}
-        </motion.p>
-
-        <motion.p
-          className="text-white/50 text-xs md:text-sm mb-10 max-w-sm leading-relaxed"
-          style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          {lang === 'en' ? landingCopy.descriptionEnLine1 : landingCopy.descriptionZhLine1}
-          <br />
-          {lang === 'en' ? landingCopy.descriptionEnLine2 : landingCopy.descriptionZhLine2}
-        </motion.p>
+  className="text-xs md:text-sm mb-10 max-w-md leading-relaxed"
+  style={{
+    fontFamily: "'Noto Sans TC', sans-serif",
+    color: '#8B6B4A',
+  }}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.7 }}
+>
+  {lang === 'en' ? (
+    <>
+      Wander through old Hung Hom streets, the harbourfront, and hidden corners.
+      <br />
+      Answer 13 sensory questions and receive your exclusive character card.
+    </>
+  ) : (
+    <>
+      穿梭紅磡舊街、海濱與隱世角落
+      <br />
+      回答 13 條感官問題，領取你的專屬角色卡
+    </>
+  )}
+</motion.p>
 
         <motion.button
           onClick={onStart}
