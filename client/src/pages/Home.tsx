@@ -1203,13 +1203,17 @@ const result = {
             className="text-white/60 text-xs leading-relaxed"
             style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
           >
-            {lang === 'en' ? 'Here is your exclusive boarding pass.' : '以下是你的專屬登機證。'}
+            {lang === 'en'
+  ? 'Here is your exclusive traveller character card.'
+  : '以下是你的專屬旅人角色卡。'}
           </p>
         </div>
 
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-[#D4A843]/40" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{lang === 'en' ? uiCopyEn.boardingPassLabel : 'Boarding Pass · 登機證'}</span>
+          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{lang === 'en'
+  ? 'Traveller Character Card'
+  : 'Traveller Character Card · 專屬旅人角色卡'}</span>
           <div className="h-px flex-1 bg-[#D4A843]/40" />
         </div>
 
