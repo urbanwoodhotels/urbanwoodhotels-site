@@ -404,11 +404,13 @@ function ChapterIntroScreen({
   onContinue,
   chapters,
   overlayColor,
+  lang,
 }: {
   chapterIndex: number;
   onContinue: () => void;
   chapters: Chapter[];
   overlayColor?: string;
+  lang: Lang;
 }) {
   const overlay = overlayColor ?? 'rgba(13,27,46,0.65)';
   const chapter = chapters[chapterIndex];
@@ -446,17 +448,17 @@ const introBg = getResponsiveImage(
   transition={{ delay: 0.2, duration: 0.7 }}
 >
   <button
-    onClick={onContinue}
-    className="px-8 py-3 text-sm tracking-[0.2em] uppercase transition-all duration-300"
-    style={{
-      fontFamily: "'DM Sans', sans-serif",
-      background: chapterStyle.buttonBg,
-      color: chapterStyle.buttonText,
-      border: `1px solid ${chapterStyle.buttonBg}`,
-    }}
-  >
-    進入場景 →
-  </button>
+  onClick={onContinue}
+  className="px-8 py-3 text-sm tracking-[0.2em] uppercase transition-all duration-300"
+  style={{
+    fontFamily: "'DM Sans', sans-serif",
+    background: chapterStyle.buttonBg,
+    color: chapterStyle.buttonText,
+    border: `1px solid ${chapterStyle.buttonBg}`,
+  }}
+>
+  {lang === 'en' ? 'Enter Scene →' : '進入場景 →'}
+</button>
 </motion.div>
     </motion.div>
   );
@@ -745,23 +747,43 @@ const btnSubmitForm =
   });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!platform) {
-      toast.error('請選擇參加平台');
-      return;
-    }
-    if (!socialHandle.trim()) {
-      toast.error('請填寫帳戶名稱');
-      return;
-    }
-    if (!name.trim()) {
-      toast.error('請填寫姓名');
-      return;
-    }
-    if (!email.trim()) {
-      toast.error('請填寫電郵地址');
-      return;
-    }
+  e.preventDefault();
+
+  if (!platform) {
+    toast.error(
+      lang === 'en'
+        ? 'Please select Instagram or Facebook.'
+        : '請選擇 Instagram 或 Facebook。'
+    );
+    return;
+  }
+
+  if (!socialHandle.trim()) {
+    toast.error(
+      lang === 'en'
+        ? 'Please enter your social media username.'
+        : '請填寫社交平台用戶名稱。'
+    );
+    return;
+  }
+
+  if (!name.trim()) {
+    toast.error(
+      lang === 'en'
+        ? 'Please enter your name.'
+        : '請填寫姓名。'
+    );
+    return;
+  }
+
+  if (!email.trim()) {
+    toast.error(
+      lang === 'en'
+        ? 'Please enter your email address.'
+        : '請填寫電郵地址。'
+    );
+    return;
+  }
 
     submitMutation.mutate({
   platform,
@@ -1049,12 +1071,39 @@ const result = {
     : cfg[`result_${resultType}_boardingPassImage`] ||
       baseResult.boardingPassImage ||
       '';
-  const btnShare = cfg['btn_share'] ?? '📤 分享我的登機證';
-  const btnSaveBoardingPass = cfg['btn_save_boarding_pass'] ?? '📸 儲存登機證圖片';
-  const btnBookHotel = cfg['btn_book_hotel'] ?? '🏨 立即預訂城木紅磡';
-  const btnBookHotelUrl = cfg['btn_book_hotel_url'] ?? 'https://urbanwoodhotels.com/hk/global_hotels/hung-hom-hk/';
-  const btnRestart = cfg['btn_restart'] ?? '重新測驗';
-  const resultShareHint = cfg['result_share_hint'] ?? '分享至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！';
+ const btnShare =
+  cfg['btn_share'] ??
+  (lang === 'en'
+    ? '📤 Share My Traveller Character Card'
+    : '📤 分享我的旅人角色卡');
+
+const btnSaveBoardingPass =
+  cfg['btn_save_boarding_pass'] ??
+  (lang === 'en'
+    ? '📸 Save Character Card Image'
+    : '📸 儲存旅人角色卡圖片');
+
+const btnBookHotel =
+  cfg['btn_book_hotel'] ??
+  (lang === 'en'
+    ? '🏨 Book Urbanwood Hung Hom'
+    : '🏨 立即預訂城木紅磡');
+
+const btnBookHotelUrl =
+  cfg['btn_book_hotel_url'] ??
+  'https://urbanwoodhotels.com/hk/global_hotels/hung-hom-hk/';
+
+const btnRestart =
+  cfg['btn_restart'] ??
+  (lang === 'en'
+    ? 'Retake Quiz'
+    : '重新測驗');
+
+const resultShareHint =
+  cfg['result_share_hint'] ??
+  (lang === 'en'
+    ? 'Share to Instagram/Facebook Story, tag @urbanwoodhotels + #Urbanwood2ndAnniversary to join the giveaway!'
+    : '分享至限時動態，Tag @urbanwoodhotels ＋ #城木2周年 即可參加抽獎！');
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -1560,6 +1609,7 @@ const heroBg = getResponsiveImage(
               chapters={chapters}
               onContinue={handleChapterContinue}
               overlayColor="rgba(13,27,46,0.48)"
+              lang={lang}
             />
           </motion.div>
         )}
