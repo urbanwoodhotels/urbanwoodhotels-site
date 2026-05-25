@@ -843,7 +843,7 @@ const btnSubmitForm =
                 style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
               >
                 <p
-  className="text-white/80 text-sm md:text-base leading-relaxed mb-3"
+  className="text-white/80 text-xs md:text-sm leading-relaxed mb-3"
   style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
 >
   感謝您參加本次心理測驗！請根據以下要求提交您的相關資料以作參加活動。
@@ -859,7 +859,7 @@ const btnSubmitForm =
                   href={termsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#D4A843] text-sm underline underline-offset-2 hover:text-[#E8C56A] transition-colors"
+                  className="text-[#D4A843] text-xs underline underline-offset-2 hover:text-[#E8C56A] transition-colors"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   {termsLabel} ↗
