@@ -41,16 +41,40 @@ function writeJson<T>(key: string, value: T) {
   window.localStorage.setItem(key, JSON.stringify(value));
 }
 
-export function getConfigRows(): ConfigRow[] {
-  return readJson<ConfigRow[]>(STORAGE_KEYS.config, []);
+export async function getConfigRows(): Promise<ConfigRow[]> {
+  const { data, error } = await supabase
+    .from('quiz_config')
+    .select('*');
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return (data ?? []).map((r: any) => ({
+    configKey: r.config_key,
+    configValue: r.config_value ?? '',
+  }));
 }
 
-export function saveConfigRow(key: string, value: string) {
-  const rows = getConfigRows();
-  const idx = rows.findIndex((r) => r.configKey === key);
-  if (idx >= 0) rows[idx] = { configKey: key, configValue: value };
-  else rows.push({ configKey: key, configValue: value });
-  writeJson(STORAGE_KEYS.config, rows);
+export async function saveConfigRow(key: string, value: string) {
+  const { error } = await supabase
+    .from('quiz_config')
+    .upsert(
+      {
+        config_key: key,
+        config_value: value,
+      },
+      {
+        onConflict: 'config_key',
+      }
+    );
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
   return { success: true as const };
 }
 
@@ -159,7 +183,7 @@ export function checkAdmin() {
   return { isAdmin: window.localStorage.getItem(STORAGE_KEYS.adminSession) === 'true' };
 }
 
-export function addQuestion(input: {
+export async function addQuestion(input: {
   chapterId: number;
   text: string;
   questionType: QuestionType;
@@ -171,7 +195,7 @@ export function addQuestion(input: {
   F?: string;
   sensoryType?: SensoryType;
 }) {
-  const rows = getConfigRows();
+  const rows = await getConfigRows();
   const extraKeys = rows.filter((r) => r.configKey.startsWith('question_extra_'));
   const nextId = 100 + extraKeys.length + 1;
 
@@ -196,15 +220,22 @@ export function addQuestion(input: {
   return { success: true as const, id: nextId };
 }
 
-export function removeQuestion(id: number) {
+export async function removeQuestion(id: number) {
   if (id < 100) throw new Error('原有題目不能刪除，只能編輯');
-  const rows = getConfigRows().filter((r) => r.configKey !== `question_extra_${id}`);
-  writeJson(STORAGE_KEYS.config, rows);
-  return { success: true as const };
+  const rows = (await getConfigRows()).filter(
+  (r: ConfigRow) => r.configKey !== `question_extra_${id}`
+);
+
+await supabase
+  .from('quiz_config')
+  .delete()
+  .eq('config_key', `question_extra_${id}`);
+
+return { success: true as const };
 }
 
-export function getMergedChaptersPreview(): Chapter[] {
-  const rows = getConfigRows();
+export async function getMergedChaptersPreview(): Promise<Chapter[]> {
+  const rows = await getConfigRows();
 
   return defaultChapters
     .map((chapter) => ({
