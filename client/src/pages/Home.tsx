@@ -74,8 +74,7 @@ function applyConfig(configRows: { configKey: string; configValue: string }[]): 
   });
 
   return staticChapters.map((chapter) => {
-    const bgKey = `chapter_${chapter.id}_bg`;
-    const updatedBg = configMap[bgKey] ?? chapter.bgImage;
+    const updatedBg = chapter.bgImage;
 
     const updatedQuestions = chapter.questions.map((q) => {
       const qKey = `question_${q.id}`;
@@ -414,7 +413,10 @@ function ChapterIntroScreen({
   const overlay = overlayColor ?? 'rgba(13,27,46,0.65)';
   const chapter = chapters[chapterIndex];
 const chapterStyle = chapterStyleMap[chapter.id] ?? chapterStyleMap[1];
-const introBg = chapterStyle.introBg || chapter.bgImage;
+const introBg = getResponsiveImage(
+  imageConfig.chapters[chapter.id]?.coverDesktop || chapter.bgImage,
+  imageConfig.chapters[chapter.id]?.coverMobile
+);
   return (
     <motion.div
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
@@ -500,7 +502,10 @@ function QuestionScreen({
   const question = allQuestions[questionIndex];
   const currentChapter = chapters.find((c) => c.questions.some((q) => q.id === question.id))!;
   const chapterStyle = chapterStyleMap[currentChapter.id] ?? chapterStyleMap[1];
-const questionBg = chapterStyle.questionBg || currentChapter.bgImage;
+const questionBg = getResponsiveImage(
+  imageConfig.chapters[currentChapter.id]?.questionDesktop || currentChapter.bgImage,
+  imageConfig.chapters[currentChapter.id]?.questionMobile
+);
   const displayQuestionText = lang === 'en' ? questionTextEn[question.id] ?? question.text : question.text;
   const displayChapterSubtitle = lang === 'en' ? chapterCopyEn[currentChapter.id]?.subtitle ?? currentChapter.subtitle : currentChapter.subtitle;
   const displaySensoryType = lang === 'en' ? sensoryLabel[question.sensoryType] ?? question.sensoryType : question.sensoryType;
@@ -795,7 +800,15 @@ const btnSubmitForm =
       transition={{ duration: 0.6 }}
     >
       <div className="absolute inset-0 bg-[#0D1B2E]" />
-      <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${bgMap[result.id] ?? bgMap.A})` }} />
+      <div
+  className="absolute inset-0 bg-cover bg-center opacity-20"
+  style={{
+    backgroundImage: `url(${getResponsiveImage(
+      imageConfig.form.desktop || bgMap[result.id] || bgMap.A,
+      imageConfig.form.mobile
+    )})`,
+  }}
+/>
       <DecoCorners />
 
       <motion.div
@@ -1151,9 +1164,10 @@ const result = {
       <div
   className="absolute inset-0 bg-cover bg-center"
   style={{
-    backgroundImage: `url(${
-      resultBgMap[resultType][lang === 'en' ? 'en' : 'zh']
-    })`,
+    backgroundImage: `url(${getResponsiveImage(
+      imageConfig.result.desktop || resultBgMap[resultType][lang === 'en' ? 'en' : 'zh'],
+      imageConfig.result.mobile
+    )})`,
   }}
 />
 <div
@@ -1163,8 +1177,7 @@ const result = {
       'linear-gradient(to bottom, rgba(13,27,46,0.28), rgba(13,27,46,0.38), rgba(13,27,46,0.52))',
   }}
 />
-
-<DecoCorners />      
+    
       <DecoCorners />
 
       <motion.div
