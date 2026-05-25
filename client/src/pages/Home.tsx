@@ -842,12 +842,19 @@ const btnSubmitForm =
                 className="rounded-sm p-4 mb-2"
                 style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.2)' }}
               >
-                <p className="text-white/80 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-                  {introZh}
-                </p>
-                <p className="text-white/50 text-xs leading-relaxed mb-3" style={{ fontFamily: "'Noto Sans TC', sans-serif" }}>
-              
-                </p>
+                <p
+  className="text-white/80 text-xs md:text-sm leading-relaxed mb-3"
+  style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
+>
+  感謝您參加本次心理測驗！請根據以下要求提交您的相關資料以作參加活動。
+  <br />
+  閣下必須細閱及遵守條款及細則，而閣下的參與及遞交該表格將代表已閱讀及同意各項條款及細則。
+  <br />
+  <br />
+  Thank you for participating in this personality quiz. Please submit your information below to join the campaign.
+  <br />
+  Please read and comply with the Terms & Conditions carefully. By participating and submitting this form, you acknowledge that you have read and agreed to all terms and conditions.
+</p>
                 <a
                   href={termsUrl}
                   target="_blank"
