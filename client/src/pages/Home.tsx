@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { chapters as staticChapters, results, calculateResult, type AnswerType, type Chapter } from '@/lib/quizData';
 import { chapterCopyEn, landingCopy, optionsEn, questionTextEn, resultCopyEn, sensoryLabel, uiCopyEn, type Lang } from '@/lib/i18n';
-
+import { imageConfig } from '@/lib/imageConfig';
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function shuffleArray<T>(array: T[]): T[] {
   const copied = [...array];
@@ -306,6 +306,13 @@ function LanguageScreen({
 }
 
 // ─── Landing Screen ───────────────────────────────────────────────────────────
+function getResponsiveImage(desktop: string, mobile?: string) {
+  const isMobile =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 767px)').matches;
+
+  return isMobile && mobile ? mobile : desktop;
+}
 function LandingScreen({
   onStart,
   heroBg,
@@ -1416,10 +1423,10 @@ export default function Home() {
   const allQuestions = useMemo(() => chapters.flatMap((c) => c.questions), [chapters]);
   const totalQuestions = allQuestions.length;
 
-  const heroBg = useMemo(() => {
-    const row = configRows?.find((r) => r.configKey === 'hero_bg');
-    return row?.configValue ?? HERO_BG;
-  }, [configRows]);
+const heroBg = getResponsiveImage(
+  imageConfig.cover.desktop,
+  imageConfig.cover.mobile
+);
 
   const handleLanguageSelect = useCallback((selectedLang: Lang) => {
     setLang(selectedLang);
