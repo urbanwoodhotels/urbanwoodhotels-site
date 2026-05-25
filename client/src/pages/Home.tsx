@@ -630,10 +630,10 @@ const questionBg = getResponsiveImage(
   background: selectedAnswer === opt ? 'rgba(212,168,67,0.2)' : chapterStyle.answerBoxBg,
   border: `1px solid ${chapterStyle.answerBorder}`,
 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15 + i * 0.08 }}
-                whileTap={{ scale: 0.99 }}
+                initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+transition={{ duration: 0.12 }}
+whileTap={{ scale: 0.99 }}
               >
                 <span
                   className="flex-shrink-0 w-7 h-7 rounded-sm border flex items-center justify-center text-xs font-bold font-['DM_Sans'] transition-all duration-200"
