@@ -167,8 +167,8 @@ const chapterStyleMap: Record<
     textColor: '#E9EFEA',
     sceneColor: '#D4A843',
     questionTextColor: '#FFFFFF',
-    buttonBg: '#5F7E72',
-    buttonText: '#FFFFFF',
+    buttonBg: '#D4A843',
+    buttonText: '#1F2A25',
     answerBoxBg: 'rgba(13,27,46,0.68)',
     answerBorder: 'rgba(255,255,255,0.28)',
     answerText: '#FFFFFF',
@@ -734,8 +734,8 @@ function GiveawayFormScreen({
     cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
 const btnSubmitForm =
   lang === 'en'
-    ? 'Complete & Join Giveaway ✦'
-    : cfg['btn_submit_form'] ?? '完成並參加抽獎 ✦';
+    ? 'Complete & Join Giveaway'
+    : cfg['btn_submit_form'] ?? '完成並參加抽獎';
   const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
   const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
   const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
@@ -1251,20 +1251,21 @@ const resultShareHint =
         transition={{ delay: 0.2, duration: 0.8, type: 'spring', stiffness: 100 }}
       >
         <div
-          className="mb-4 rounded-sm px-4 py-3 text-center"
-          style={{
-            background: 'rgba(212,168,67,0.12)',
-            border: '1px solid rgba(212,168,67,0.35)',
-          }}
-        >
+  className="mb-4 rounded-sm px-4 py-3 text-center"
+  style={{
+    background: 'rgba(13,27,46,0.78)',
+    border: '1px solid rgba(255,255,255,0.22)',
+    backdropFilter: 'blur(8px)',
+  }}
+>
           <p
-            className="text-[#E8C56A] text-sm font-semibold mb-1 drop-shadow-[0_0_8px_rgba(232,197,106,0.18)]"
+            className="text-white text-sm font-semibold mb-1"
             style={{ fontFamily: "'Noto Serif TC', serif" }}
           >
             {lang === 'en' ? 'Giveaway registration successful!' : '已成功登記抽獎！'}
           </p>
           <p
-            className="text-white/60 text-xs leading-relaxed"
+            className="text-white/85 text-xs leading-relaxed"
             style={{ fontFamily: "'Noto Sans TC', sans-serif" }}
           >
             {lang === 'en'
