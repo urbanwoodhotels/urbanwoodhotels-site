@@ -731,11 +731,11 @@ function GiveawayFormScreen({
     cfg['form_consent_en'] ??
     'I consent to the collection and use of my contact information for direct marketing purposes, including promotions and news. I understand that I can withdraw my consent at any time.';
   const successMsg =
-    cfg['form_success_msg'] ?? '記得分享你的登機證至 IG Story，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
+    cfg['form_success_msg'] ?? '記得分享你的專屬旅人角色卡至限時動態，Tag @urbanwoodhotels ＋ #城木2周年 増加中獎機會！';
 const btnSubmitForm =
   lang === 'en'
     ? 'Complete & Join Giveaway'
-    : cfg['btn_submit_form'] ?? '完成並參加抽獎';
+    : '完成並參加抽獎';
   const almostThereLabel = cfg['form_almost_there_label'] ?? 'Almost There';
   const travelerTypeLabel = cfg['form_traveler_type_label'] ?? 'Your Traveller Type';
   const successTitleLabel = cfg['form_success_title_label'] ?? '✶ 已成功登記抽獎！';
