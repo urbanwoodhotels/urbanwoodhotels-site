@@ -54,11 +54,11 @@ export const imageConfig: {
 
   form: {
     desktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779180154/urbanwood-quiz/enxo8cz5d44zwwnn6me3.jpg',
-    mobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779180154/urbanwood-quiz/enxo8cz5d44zwwnn6me3.jpg',
+    mobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759174/Online-Test-Result-cover-deisgn-phone_rgwn65.jpg',
   },
 
   result: {
     desktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779180154/urbanwood-quiz/enxo8cz5d44zwwnn6me3.jpg',
-    mobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779180154/urbanwood-quiz/enxo8cz5d44zwwnn6me3.jpg',
+    mobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759174/Online-Test-Result-cover-deisgn-phone_rgwn65.jpg',
   },
 };
