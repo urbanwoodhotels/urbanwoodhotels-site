@@ -47,7 +47,7 @@ export const imageConfig: {
     4: {
       coverDesktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759144/Ch.4_v2_acykvy.jpg',
       coverMobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779760563/ch.4_qjxous.jpg',
-      questionDesktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759158/Online-Test-Result-cover-deisgn-05_xarzwz.jpg',
+      questionDesktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779764353/ch.4-update_otgsrz.jpg',
       questionMobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779760713/ch.4_notext_q6ctjy.jpg',
     },
   },
