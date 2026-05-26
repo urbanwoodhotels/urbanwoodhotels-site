@@ -1028,7 +1028,9 @@ const btnSubmitForm =
                   clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
                 }}
               >
-                {submitMutation.isPending ? (lang === 'en' ? uiCopyEn.submitting : '提交中...') : `✶ ${btnSubmitForm}`}
+                {submitMutation.isPending
+  ? (lang === 'en' ? uiCopyEn.submitting : '提交中...')
+  : btnSubmitForm}
               </button>
             </form>
           )}
