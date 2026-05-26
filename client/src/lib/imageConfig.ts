@@ -47,7 +47,7 @@ export const imageConfig: {
     4: {
       coverDesktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759144/Ch.4_v2_acykvy.jpg',
       coverMobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759174/Online-Test-Result-cover-deisgn-phone-10_awgn2u.jpg',
-      questionDesktop: 'https://rehttps://res.cloudinary.com/defqvpbk4/image/upload/v1779759158/Online-Test-Result-cover-deisgn-05_xarzwz.jpg',
+      questionDesktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759158/Online-Test-Result-cover-deisgn-05_xarzwz.jpg',
       questionMobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779180187/urbanwood-quiz/bzqqbevvtbwbk7cvzxn0.jpg',
     },
   },
