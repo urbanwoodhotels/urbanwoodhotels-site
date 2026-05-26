@@ -21,7 +21,7 @@ export const imageConfig: {
   };
 } = {
   cover: {
-    desktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779180154/urbanwood-quiz/enxo8cz5d44zwwnn6me3.jpg',
+    desktop: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779784316/26-5-26_cover_t3hhuw.jpg',
     mobile: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779759174/Online-Test-Result-cover-deisgn-phone_rgwn65.jpg',
   },
 

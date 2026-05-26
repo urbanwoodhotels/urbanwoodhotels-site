@@ -1253,8 +1253,8 @@ const resultShareHint =
         <div
   className="mb-4 rounded-sm px-4 py-3 text-center"
   style={{
-    background: 'rgba(13,27,46,0.78)',
-    border: '1px solid rgba(255,255,255,0.22)',
+    background: 'rgba(150,105,35,0.78)',
+border: '1px solid rgba(232,197,106,0.45)',
     backdropFilter: 'blur(8px)',
   }}
 >
@@ -1275,12 +1275,14 @@ const resultShareHint =
         </div>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-px flex-1 bg-[#E8C56A]/55" />
-          <span className="text-[#E8C56A] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase drop-shadow-[0_0_8px_rgba(232,197,106,0.18)]">{lang === 'en'
-  ? 'Traveller Character Card'
-  : 'Traveller Character Card · 專屬旅人角色卡'}</span>
-          <div className="h-px flex-1 bg-[#E8C56A]/55" />
-        </div>
+  <div className="h-px flex-1 bg-white/45" />
+  <span className="text-white text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">
+    {lang === 'en'
+      ? 'Traveller Character Card'
+      : 'Traveller Character Card · 專屬旅人角色卡'}
+  </span>
+  <div className="h-px flex-1 bg-white/45" />
+</div>
 
         <div
           id="boarding-pass-card"
