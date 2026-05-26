@@ -1258,7 +1258,7 @@ const resultShareHint =
           }}
         >
           <p
-            className="text-[#D4A843] text-sm font-semibold mb-1"
+            className="text-[#E8C56A] text-sm font-semibold mb-1 drop-shadow-[0_0_8px_rgba(232,197,106,0.18)]"
             style={{ fontFamily: "'Noto Serif TC', serif" }}
           >
             {lang === 'en' ? 'Giveaway registration successful!' : '已成功登記抽獎！'}
@@ -1274,11 +1274,11 @@ const resultShareHint =
         </div>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-px flex-1 bg-[#D4A843]/40" />
-          <span className="text-[#D4A843] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase">{lang === 'en'
+          <div className="h-px flex-1 bg-[#E8C56A]/55" />
+          <span className="text-[#E8C56A] text-xs tracking-[0.3em] font-['DM_Sans'] uppercase drop-shadow-[0_0_8px_rgba(232,197,106,0.18)]">{lang === 'en'
   ? 'Traveller Character Card'
   : 'Traveller Character Card · 專屬旅人角色卡'}</span>
-          <div className="h-px flex-1 bg-[#D4A843]/40" />
+          <div className="h-px flex-1 bg-[#E8C56A]/55" />
         </div>
 
         <div
@@ -1311,7 +1311,7 @@ const resultShareHint =
             <div className="px-6 pt-6 pb-4">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[#D4A843]/60 text-[10px] tracking-[0.25em] font-['DM_Sans'] uppercase mb-1">{lang === 'en' ? uiCopyEn.passengerType : 'Passenger Type'}</p>
+                  <p className="text-[#E8C56A]/80 text-[10px] tracking-[0.25em] font-['DM_Sans'] uppercase mb-1">{lang === 'en' ? uiCopyEn.passengerType : 'Passenger Type'}</p>
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{result.icon}</span>
                     <div>
