@@ -720,7 +720,10 @@ function GiveawayFormScreen({
     cfg['form_intro_en'] ??
     'Thank you for participating in this psychological test! Please provide the relevant information as per the requirements below to register the giveaway. You must carefully read and comply with the Terms and Conditions. Your participation and submission of this form will signify that you have read, understood, and agreed to all the stated terms and conditions.';
   const termsLabel = cfg['form_terms_label'] ?? '條款及細則 Terms and Conditions';
-  const termsUrl = cfg['form_terms_url'] ?? 'https://southnesthk.com/south-nest-3rd-anniversary-celebration2026/';
+  const termsUrl =
+  lang === 'en'
+    ? 'https://urbanwoodhotels.com/en/2nd-anniversary-complete-a-psychological-test-to-win-complimentary-accommodation/'
+    : 'https://urbanwoodhotels.com/hk/%e4%ba%8c%e9%80%b1%e5%b9%b4%e5%ae%8c%e6%88%90%e5%bf%83%e7%90%86%e6%b8%ac%e9%a9%97%e8%b4%8f%e5%8f%96%e5%85%8d%e8%b2%bb%e4%bd%8f%e5%ae%bf/';
   const consentZh =
     cfg['form_consent_zh'] ??
     '本人願意提供上述個人資料，並同意使用我的電郵地址，用於發送直接促銷訊息，包括產品推廣、折扣活動及相關資訊。本人明白可隨時取消訂閱。';
