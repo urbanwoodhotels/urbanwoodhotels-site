@@ -52,10 +52,10 @@ boardingPassImageEn?: string;
     urbanwoodMatch:
       '城木酒店以木系簡約設計與溫潤氛圍，回應你對慢活的嚮往。在這裡，你可以放下節奏，讓自己完全放鬆，享受屬於自己的寧靜時光。',
     boardingPassDestination: 'SLOW STAY',
-    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870047/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_A_iswqfu.jpg',
-    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870017/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_A_edly7w.jpg',
-    boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870047/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_A_iswqfu.jpg',
-    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870017/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_A_edly7w.jpg',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874938/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_A_xe0otb.jpg',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874883/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_A_rqhnsv.jpg',
+    boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874938/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_A_xe0otb.jpg',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874883/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_A_rqhnsv.jpg',
   },
   B: {
     id: 'B',
@@ -70,10 +70,10 @@ boardingPassImageEn?: string;
     urbanwoodMatch:
       '城木酒店連結著地道生活圈，讓你隨時走進街區尋找美食，再帶著滿足回到舒適空間。',
     boardingPassDestination: 'LOCAL BITES',
-    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870047/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_B_syxomg.jpg',
-    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870017/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_B_oiwjtr.jpg',
-     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870047/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_B_syxomg.jpg',
-    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870017/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_B_oiwjtr.jpg',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874940/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_B_mx0urt.jpg',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874882/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_B_miumpy.jpg',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874940/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_B_mx0urt.jpg',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874882/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_B_miumpy.jpg',
   },
   C: {
     id: 'C',
@@ -88,10 +88,10 @@ boardingPassImageEn?: string;
     urbanwoodMatch:
       '城木酒店的設計細節與空間層次，讓你隨時都能捕捉到富有質感的畫面。',
     boardingPassDestination: 'FRAME & LIGHT',
-    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870048/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_C_qujzxm.jpg',
-    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_C_v1mhbk.jpg',
-     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870048/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_C_qujzxm.jpg',
-    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_C_v1mhbk.jpg',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874942/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_C_d3ikpg.jpg',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874886/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_C_ukimdq.jpg',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874942/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_C_d3ikpg.jpg',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874886/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_C_ukimdq.jpg',
   },
   D: {
     id: 'D',
@@ -106,10 +106,10 @@ boardingPassImageEn?: string;
     urbanwoodMatch:
       '城木酒店位於城市與社區交界，讓你輕鬆深入不同生活層次，開展屬於你的探索路線。',
     boardingPassDestination: 'CITY DEPTH',
-    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870471/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_xahtzn.jpg',
-    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_D_zzjyuj.jpg',
-     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870471/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_xahtzn.jpg',
-    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_D_zzjyuj.jpg',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874918/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_D_ar2cz8.jpg',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874951/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_D_njxjzs.jpg',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874918/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_D_ar2cz8.jpg',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874951/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_D_njxjzs.jpg',
   },
   E: {
     id: 'E',
@@ -124,10 +124,10 @@ boardingPassImageEn?: string;
     urbanwoodMatch:
       '城木酒店在夜晚成為延續感受的空間，讓你在靜謐中慢慢消化屬於城市的情緒。',
     boardingPassDestination: 'NIGHT VIBE',
-    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870049/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_E_afiw63.jpg',
-    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_E_mrcvhg.jpg',
-     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870049/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_E_afiw63.jpg',
-    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_E_mrcvhg.jpg',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874940/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_E_xohx3k.jpg',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874898/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_E_asvqlu.jpg',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874940/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_E_xohx3k.jpg',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874898/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_E_asvqlu.jpg',
   },
   F: {
     id: 'F',
@@ -142,10 +142,10 @@ boardingPassImageEn?: string;
     urbanwoodMatch:
       '城木酒店連結社區與旅人，讓你更容易與城市產生互動，成為其中的一部分。',
     boardingPassDestination: 'HUMAN LINKS',
-    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870048/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_F_zztypy.jpg',
-    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_F_zlnvqv.jpg',
-     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870048/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_F_zztypy.jpg',
-    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779870018/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_F_zlnvqv.jpg',
+    resultImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874940/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_F_xfoctq.jpg',
+    resultImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874881/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_F_ahmd5z.jpg',
+     boardingPassImage: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874940/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_Final_20260527_TC_Result_F_xfoctq.jpg',
+    boardingPassImageEn: 'https://res.cloudinary.com/defqvpbk4/image/upload/v1779874881/202605_291_2nd_Anniversary_1080x1920_Result_Visuals_EN_Final_20260527_EN_Result_F_ahmd5z.jpg',
   },
 };
 
